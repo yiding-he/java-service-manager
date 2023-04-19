@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface Scene {
 
+  String greetings();
+
   String getPrompt();
 
   List<String> getSelections();

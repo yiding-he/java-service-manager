@@ -18,6 +18,11 @@ public class ServiceInfoScene extends AbstractScene {
   }
 
   @Override
+  public String greetings() {
+    return null;
+  }
+
+  @Override
   public String getPrompt() {
     return this.javaService.getName() + ": ";
   }

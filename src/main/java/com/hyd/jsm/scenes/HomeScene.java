@@ -19,6 +19,20 @@ public class HomeScene extends AbstractScene {
   private ServiceInfoScene serviceInfoScene;
 
   @Override
+  public String greetings() {
+    StringBuilder sb = new StringBuilder()
+      .append("检查配置...\n")
+      .append("已读取 ").append(jsmConf.getServices().size()).append(" 个 Java 服务配置：\n");
+
+    jsmConf.getServices().forEach((serviceName, service) -> {
+      service.setName(serviceName);
+      sb.append("  - ").append(serviceName).append("\n");
+    });
+
+    return sb.toString();
+  }
+
+  @Override
   public String getPrompt() {
     return "按 TAB 选择服务: ";
   }
