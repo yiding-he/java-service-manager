@@ -26,7 +26,7 @@ public class HomeScene extends AbstractScene {
 
     jsmConf.getServices().forEach((serviceName, service) -> {
       service.setName(serviceName);
-      sb.append("  * ").append(serviceName).append("\n");
+      sb.append("  * ").append(serviceName).append(" : ").append(service.getPath()).append("\n");
     });
 
     return sb.toString();
