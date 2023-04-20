@@ -22,7 +22,7 @@ public class JsmConf {
     }
 
     public String getPath() {
-      return path;
+      return path == null ? null : path.endsWith("/") ? path : (path + "/");
     }
 
     public void setPath(String path) {

@@ -26,7 +26,7 @@ public class HomeScene extends AbstractScene {
 
     jsmConf.getServices().forEach((serviceName, service) -> {
       service.setName(serviceName);
-      sb.append("  - ").append(serviceName).append("\n");
+      sb.append("  * ").append(serviceName).append("\n");
     });
 
     return sb.toString();
@@ -34,7 +34,7 @@ public class HomeScene extends AbstractScene {
 
   @Override
   public String getPrompt() {
-    return "按 TAB 选择服务: ";
+    return "按 TAB 选择服务> ";
   }
 
   @Override

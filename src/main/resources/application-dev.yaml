@@ -1,0 +1,7 @@
+jsm.services:
+  service1:
+    path: /home/java/service1/
+  service2:
+    path: /home/java/service2/
+  service3:
+    path: /home/java/service3/

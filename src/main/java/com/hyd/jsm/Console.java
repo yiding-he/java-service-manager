@@ -6,16 +6,17 @@ import org.jline.reader.ParsedLine;
 import org.jline.reader.impl.completer.StringsCompleter;
 import org.jline.terminal.Terminal;
 import org.jline.terminal.TerminalBuilder;
+import org.jline.utils.AttributedStringBuilder;
+import org.jline.utils.AttributedStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Collections;
+import java.util.LinkedList;
 
 @Component
 public class Console {
@@ -26,11 +27,11 @@ public class Console {
     SUCCESS, REPEAT, TERMINATED
   }
 
+  private final LinkedList<Scene> scenes = new LinkedList<>();
+
   private Terminal terminal;
 
   private LineReader lineReader;
-
-  private Scene currentScene;
 
   @PostConstruct
   private void init() throws IOException {
@@ -38,46 +39,64 @@ public class Console {
     this.lineReader = LineReaderBuilder.builder()
       .terminal(terminal)
       .completer(new StringsCompleter(() -> {
-        if (this.currentScene == null) {
+        if (this.scenes.isEmpty()) {
           return Collections.emptyList();
         } else {
-          return this.currentScene.getSelections();
+          return this.scenes.getLast().getSelections();
         }
       }))
       .build();
   }
 
+  public void writeLine(String s) {
+    this.terminal.writer().println(s);
+  }
+
   public void start(Scene startScene) {
     outputSystemInfo();
 
-    this.currentScene = startScene;
+    this.scenes.addLast(startScene);
     ProcessResult processResult = ProcessResult.SUCCESS;
 
     do {
-      var greetings = this.currentScene.greetings();
+      var greetings = this.scenes.getLast().greetings();
       if (processResult == ProcessResult.SUCCESS && greetings != null) {
         terminal.writer().println(greetings);
       }
 
-      var line = lineReader.readLine(this.currentScene.getPrompt());
+      var line = lineReader.readLine(generatePrompt());
       var parsedLine = lineReader.getParser().parse(line, 0);
-      processResult = processCommand(this.currentScene, parsedLine);
+      processResult = processCommand(this.scenes.getLast(), parsedLine);
 
     } while (processResult != ProcessResult.TERMINATED);
 
     terminal.writer().println("Bye!\n");
   }
 
+  private String generatePrompt() {
+    return new AttributedStringBuilder()
+      .style(AttributedStyle.DEFAULT.foreground(AttributedStyle.CYAN))
+      .append(this.scenes.getLast().getPrompt())
+      .toAnsi();
+  }
+
   private ProcessResult processCommand(Scene scene, ParsedLine parsedLine) {
+
     if (parsedLine.word().equalsIgnoreCase("exit")) {
       return ProcessResult.TERMINATED;
+
+    } else if (parsedLine.word().equalsIgnoreCase("..")) {
+      if (scenes.size() > 1) {
+        scenes.removeLast();
+      }
+      return ProcessResult.SUCCESS;
     }
 
     var nextScene = scene.processCommand(parsedLine);
     if (nextScene == null) {
       return ProcessResult.REPEAT;
     } else {
-      this.currentScene = nextScene;
+      this.scenes.addLast(nextScene);
       return ProcessResult.SUCCESS;
     }
   }
