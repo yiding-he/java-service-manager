@@ -52,6 +52,14 @@ public class Console {
     this.terminal.writer().println(s);
   }
 
+  public void writeError(String s) {
+    this.terminal.writer().println(
+      new AttributedStringBuilder()
+        .style(AttributedStyle.DEFAULT.foreground(AttributedStyle.RED))
+        .append(s).toAnsi()
+    );
+  }
+
   public void start(Scene startScene) {
     outputSystemInfo();
 
@@ -74,10 +82,7 @@ public class Console {
   }
 
   private String generatePrompt() {
-    return new AttributedStringBuilder()
-      .style(AttributedStyle.DEFAULT.foreground(AttributedStyle.CYAN))
-      .append(this.scenes.getLast().getPrompt())
-      .toAnsi();
+    return this.scenes.getLast().getPrompt().toAnsi();
   }
 
   private ProcessResult processCommand(Scene scene, ParsedLine parsedLine) {

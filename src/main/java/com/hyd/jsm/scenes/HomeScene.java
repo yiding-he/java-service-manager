@@ -3,6 +3,8 @@ package com.hyd.jsm.scenes;
 import com.hyd.jsm.Scene;
 import com.hyd.jsm.config.JsmConf;
 import org.jline.reader.ParsedLine;
+import org.jline.utils.AttributedStringBuilder;
+import org.jline.utils.AttributedStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -33,8 +35,10 @@ public class HomeScene extends AbstractScene {
   }
 
   @Override
-  public String getPrompt() {
-    return "按 TAB 选择服务> ";
+  public AttributedStringBuilder getPrompt() {
+    return new AttributedStringBuilder()
+      .style(AttributedStyle.DEFAULT.foreground(AttributedStyle.CYAN))
+      .append("按 TAB 选择服务> ");
   }
 
   @Override

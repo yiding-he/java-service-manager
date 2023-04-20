@@ -13,6 +13,46 @@ public class JsmConf {
 
     private String name;
 
+    private String configDir = "config";
+
+    private String logDir = "logs";
+
+    private String jvmArgs;
+
+    private String appArgs;
+
+    public String getAppArgs() {
+      return appArgs;
+    }
+
+    public void setAppArgs(String appArgs) {
+      this.appArgs = appArgs;
+    }
+
+    public String getJvmArgs() {
+      return jvmArgs;
+    }
+
+    public void setJvmArgs(String jvmArgs) {
+      this.jvmArgs = jvmArgs;
+    }
+
+    public String getConfigDir() {
+      return configDir;
+    }
+
+    public void setConfigDir(String configDir) {
+      this.configDir = configDir;
+    }
+
+    public String getLogDir() {
+      return logDir;
+    }
+
+    public void setLogDir(String logDir) {
+      this.logDir = logDir;
+    }
+
     public String getName() {
       return name;
     }
