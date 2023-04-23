@@ -7,6 +7,7 @@ import com.hyd.jsm.commands.JavaServiceStart;
 import com.hyd.jsm.commands.JvmMemStat;
 import com.hyd.jsm.commands.ProcessKill;
 import com.hyd.jsm.config.JsmConf;
+import com.hyd.jsm.util.FileUtil;
 import com.hyd.jsm.util.ProcessUtil;
 import org.jline.reader.ParsedLine;
 import org.jline.utils.AttributedStringBuilder;
@@ -59,7 +60,7 @@ public class ServiceInfoScene extends AbstractScene {
   @Override
   public String greetings() {
     var servicePath = javaService.getPath();
-    processHandle = findProcessByKeyword(servicePath);
+    processHandle = findProcessByKeyword(FileUtil.join(servicePath, "config"));
 
     var greetings = new ArrayList<>(List.of("你选择了服务：" + javaService.getName()));
     greetings.add("运行路径：" + javaService.getPath());

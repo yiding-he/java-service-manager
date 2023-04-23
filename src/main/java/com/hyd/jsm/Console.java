@@ -1,5 +1,6 @@
 package com.hyd.jsm;
 
+import org.jline.keymap.BindingReader;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.ParsedLine;
@@ -61,6 +62,10 @@ public class Console {
         .style(AttributedStyle.DEFAULT.foreground(AttributedStyle.RED))
         .append(s).toAnsi()
     );
+  }
+
+  public BindingReader newBindingReader() {
+    return new BindingReader(this.terminal.reader());
   }
 
   public void start(Scene startScene) {

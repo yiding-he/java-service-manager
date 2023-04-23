@@ -28,4 +28,12 @@ public class FileUtil {
           }
       }
   }
+
+  public static String join(String... paths) {
+    var p = Path.of("");
+    for (var path : paths) {
+      p = p.resolve(path).normalize();
+    }
+    return p.toAbsolutePath().toString();
+  }
 }
