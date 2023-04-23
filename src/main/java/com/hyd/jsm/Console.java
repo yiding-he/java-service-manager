@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -49,7 +50,9 @@ public class Console {
   }
 
   public void writeLine(String s) {
-    this.terminal.writer().println(s);
+    var writer = this.terminal.writer();
+    writer.println(s);
+    writer.flush();
   }
 
   public void writeError(String s) {

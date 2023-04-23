@@ -18,4 +18,14 @@ public class FileUtil {
   public static List<Path> listFilesByExtension(Path dir, String extension) throws IOException {
     return listFiles(dir, path -> path.toString().endsWith("." + extension));
   }
+
+  public static void createDirIfNotExists(Path path) {
+    if (!Files.exists(path)) {
+          try {
+              Files.createDirectories(path);
+          } catch (IOException e) {
+              throw new RuntimeException(e);
+          }
+      }
+  }
 }

@@ -1,28 +1,24 @@
 package com.hyd.jsm.commands;
 
-import com.hyd.jsm.config.JsmConf;
 import com.hyd.jsm.scenes.ServiceInfoScene;
 import com.hyd.jsm.util.FileUtil;
 import com.hyd.jsm.util.ProcessCommandBuilder;
+import com.hyd.jsm.util.ProcessUtil;
 import org.jline.reader.ParsedLine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.InetAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 @Component
 public class JavaServiceStart extends AbstractCommand {
 
   public static final List<String> START_COMMAND_TEMPLATE = List.of(
-    "nohup", "${java_cmd}", "${jvm_args}",
+    "${java_cmd}", "${jvm_args}",
     "-Dhostname=${hostname}",
     "-Dservice.name=${service_name}",
     "-Djava.security.egd=file:/dev/./urandom",
@@ -40,7 +36,7 @@ public class JavaServiceStart extends AbstractCommand {
   @Override
   public void execute(ParsedLine line, ProcessHandle processHandle) throws Exception {
     if (processHandle != null && processHandle.isAlive()) {
-      console.writeError("服务正在运行中。");
+      console.writeError("服务已经在运行中。");
       return;
     }
 
@@ -64,6 +60,9 @@ public class JavaServiceStart extends AbstractCommand {
     var jvmArgs = javaService.getJvmArgs() == null? "": javaService.getJvmArgs();
     var appArgs = javaService.getAppArgs() == null? "": javaService.getAppArgs();
 
+    FileUtil.createDirIfNotExists(configDir);
+    FileUtil.createDirIfNotExists(logDir);
+
     var command = new ProcessCommandBuilder(START_COMMAND_TEMPLATE)
       .replace("java_cmd", "java")
       .replace("jvm_args", jvmArgs)
@@ -76,25 +75,26 @@ public class JavaServiceStart extends AbstractCommand {
       .replace("app_args", appArgs)
       .getCommand();
 
+    var commandString = String.join(" ", command);
+
     console.writeLine("========================");
-    console.writeLine(String.join(" ", command));
+    console.writeLine(commandString);
     console.writeLine("========================");
 
     console.writeLine("服务启动中...");
-    var process = new ProcessBuilder(command)
+    new ProcessBuilder("bash", "-c", "nohup " + commandString + " &")
+      .directory(root.toFile())
       .redirectError(new File("/dev/null"))
       .redirectOutput(new File("/dev/null"))
       .redirectInput(new File("/dev/null"))
       .start();
 
-
-    var exited = process.waitFor(3, TimeUnit.SECONDS);
-    if (exited) {
-      var error = new String(process.getErrorStream().readAllBytes());
-      console.writeError("服务启动失败：" + error);
-      return;
+    Thread.sleep(3000);
+    processHandle = ProcessUtil.findProcessByKeyword(jarFile.toString());
+    if (processHandle != null) {
+      console.writeLine("服务成功启动。");
+    } else {
+      console.writeError("服务启动失败。");
     }
-
-    console.writeLine("服务成功启动。");
   }
 }
