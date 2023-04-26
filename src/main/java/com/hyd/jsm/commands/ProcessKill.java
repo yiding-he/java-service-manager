@@ -1,5 +1,6 @@
 package com.hyd.jsm.commands;
 
+import com.hyd.jsm.util.Named;
 import org.jline.reader.ParsedLine;
 import org.springframework.stereotype.Component;
 
@@ -7,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 @Component
+@Named("停止进程（10秒后将强行停止）")
 public class ProcessKill extends AbstractCommand {
 
   @Override

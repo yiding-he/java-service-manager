@@ -1,11 +1,13 @@
 package com.hyd.jsm.commands;
 
+import com.hyd.jsm.util.Named;
 import org.jline.reader.ParsedLine;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @Component
+@Named("查看堆内存情况")
 public class JvmMemStat extends AbstractCommand {
 
   @Override

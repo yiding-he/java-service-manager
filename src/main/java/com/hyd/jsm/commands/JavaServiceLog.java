@@ -1,9 +1,7 @@
 package com.hyd.jsm.commands;
 
 import com.hyd.jsm.scenes.ServiceInfoScene;
-import com.hyd.jsm.util.KeyPressUtil;
-import org.jline.keymap.BindingReader;
-import org.jline.keymap.KeyMap;
+import com.hyd.jsm.util.Named;
 import org.jline.reader.ParsedLine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,6 +12,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 @Component
+@Named("查看日志（按 Ctrl+C 退出）")
 public class JavaServiceLog extends AbstractCommand {
 
   @Autowired
@@ -34,25 +33,12 @@ public class JavaServiceLog extends AbstractCommand {
       return;
     }
 
-    var tailProcess = new ProcessBuilder(
+    new ProcessBuilder(
       List.of("tail", "-fn300", logFilePath.toString())
     ).redirectOutput(
       ProcessBuilder.Redirect.INHERIT
-    ).start();
-
-    var keyMap = new KeyMap<Keys>();
-    keyMap.bind(Keys.EXIT, KeyPressUtil.ctrl('z'));
-
-    var reader = console.newBindingReader();
-    Keys keys;
-    do {
-      keys = reader.readBinding(keyMap);
-    } while (keys != Keys.EXIT);
-
-    tailProcess.destroy();
-  }
-
-  public enum Keys {
-    EXIT
+    ).redirectInput(
+      ProcessBuilder.Redirect.PIPE
+    ).start().waitFor();
   }
 }

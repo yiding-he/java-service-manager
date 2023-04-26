@@ -2,12 +2,15 @@ package com.hyd.jsm.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @ConfigurationProperties(prefix = "jsm")
 public class JsmConf {
 
   public static class JavaService {
+
+    private String execution = "java";
 
     private String path;
 
@@ -20,6 +23,14 @@ public class JsmConf {
     private String jvmArgs;
 
     private String appArgs;
+
+    public String getExecution() {
+      return execution;
+    }
+
+    public void setExecution(String execution) {
+      this.execution = execution;
+    }
 
     public String getAppArgs() {
       return appArgs;
@@ -70,7 +81,7 @@ public class JsmConf {
     }
   }
 
-  private Map<String, JavaService> services;
+  private Map<String, JavaService> services = new HashMap<>();
 
   public Map<String, JavaService> getServices() {
     return services;

@@ -8,6 +8,7 @@ import com.hyd.jsm.commands.JvmMemStat;
 import com.hyd.jsm.commands.ProcessKill;
 import com.hyd.jsm.config.JsmConf;
 import com.hyd.jsm.util.FileUtil;
+import com.hyd.jsm.util.Named;
 import com.hyd.jsm.util.ProcessUtil;
 import org.jline.reader.ParsedLine;
 import org.jline.utils.AttributedStringBuilder;
@@ -20,6 +21,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static com.hyd.jsm.util.ProcessUtil.findProcessByKeyword;
@@ -38,10 +40,10 @@ public class ServiceInfoScene extends AbstractScene {
   private final Map<String, Class<? extends Command>> commands = new HashMap<>();
 
   {
-    commands.put("1.启动进程", JavaServiceStart.class);
-    commands.put("2.堆内存情况", JvmMemStat.class);
-    commands.put("3.停止进程", ProcessKill.class);
-    commands.put("4.查看日志输出", JavaServiceLog.class);
+    commands.put("1", JavaServiceStart.class);
+    commands.put("2", JvmMemStat.class);
+    commands.put("3", ProcessKill.class);
+    commands.put("4", JavaServiceLog.class);
   }
 
   public ServiceInfoScene setJavaService(JsmConf.JavaService javaService) {
@@ -91,7 +93,10 @@ public class ServiceInfoScene extends AbstractScene {
 
   @Override
   public List<String> getSelections() {
-    return this.commands.keySet().stream().sorted().collect(Collectors.toList());
+    return this.commands.entrySet().stream()
+      .sorted(Comparator.comparing(entry -> Integer.parseInt(entry.getKey())))
+      .map(entry -> entry.getKey() + "." + entry.getValue().getAnnotation(Named.class).value())
+      .collect(Collectors.toList());
   }
 
   @Override
@@ -101,16 +106,18 @@ public class ServiceInfoScene extends AbstractScene {
       return null;
     }
 
-    if (!this.commands.containsKey(command)) {
+    var key = command.split("\\.")[0];
+    if (!this.commands.containsKey(key)) {
       console.writeLine("操作尚未实现：" + command);
 
     } else {
-      if (processUnavailable() && !"1.启动进程".equals(command)) {
+      Class<? extends Command> commandType = this.commands.get(key);
+      if (processUnavailable() && commandType != JavaServiceStart.class) {
         console.writeLine("服务不在运行状态");
         return null;
       }
       try {
-        var commandObj = getBean(this.commands.get(command));
+        var commandObj = getBean(commandType);
         commandObj.execute(line, this.processHandle);
       } catch (Exception e) {
         log.error("", e);

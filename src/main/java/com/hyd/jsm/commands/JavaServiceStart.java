@@ -2,6 +2,7 @@ package com.hyd.jsm.commands;
 
 import com.hyd.jsm.scenes.ServiceInfoScene;
 import com.hyd.jsm.util.FileUtil;
+import com.hyd.jsm.util.Named;
 import com.hyd.jsm.util.ProcessCommandBuilder;
 import com.hyd.jsm.util.ProcessUtil;
 import org.jline.reader.ParsedLine;
@@ -15,6 +16,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 @Component
+@Named("启动进程")
 public class JavaServiceStart extends AbstractCommand {
 
   public static final List<String> START_COMMAND_TEMPLATE = List.of(
@@ -53,6 +55,7 @@ public class JavaServiceStart extends AbstractCommand {
       return;
     }
 
+    var execution = javaService.getExecution();
     var jarFile = jarFiles.get(0).normalize().toAbsolutePath();
     var hostName = InetAddress.getLocalHost().getHostName();
     var configDir = root.resolve(javaService.getConfigDir()).normalize().toAbsolutePath();
@@ -64,7 +67,7 @@ public class JavaServiceStart extends AbstractCommand {
     FileUtil.createDirIfNotExists(logDir);
 
     var command = new ProcessCommandBuilder(START_COMMAND_TEMPLATE)
-      .replace("java_cmd", "java")
+      .replace("java_cmd", execution)
       .replace("jvm_args", jvmArgs)
       .replace("hostname", hostName)
       .replace("service_name", javaService.getName())
@@ -82,7 +85,7 @@ public class JavaServiceStart extends AbstractCommand {
     console.writeLine("========================");
 
     console.writeLine("服务启动中...");
-    new ProcessBuilder("bash", "-c", "nohup " + commandString + " &")
+    new ProcessBuilder("bash", "-c", "nohup " + commandString + " > /dev/null &")
       .directory(root.toFile())
       .redirectError(new File("/dev/null"))
       .redirectOutput(new File("/dev/null"))
