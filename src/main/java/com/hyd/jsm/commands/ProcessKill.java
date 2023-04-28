@@ -8,11 +8,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 @Component
-@Named("停止进程（10秒后将强行停止）")
+@Named("停止进程")
 public class ProcessKill extends AbstractCommand {
 
   @Override
   public void execute(ParsedLine line, ProcessHandle processHandle) throws Exception {
+    console.writeLine("尝试终止进程（10秒后将强制结束进程）...");
+
     var requested = processHandle.destroy();
     if (!requested) {
       console.writeLine("进程无法终止。");

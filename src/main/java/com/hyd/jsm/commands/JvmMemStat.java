@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-@Named("查看堆内存情况")
+@Named("查看堆内存")
 public class JvmMemStat extends AbstractCommand {
 
   @Override

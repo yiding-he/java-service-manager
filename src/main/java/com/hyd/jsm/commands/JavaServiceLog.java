@@ -12,7 +12,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 @Component
-@Named("查看日志（按 Ctrl+C 退出）")
+@Named("查看日志")
 public class JavaServiceLog extends AbstractCommand {
 
   @Autowired
