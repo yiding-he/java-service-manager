@@ -21,18 +21,16 @@ public class ProcessKill extends AbstractCommand {
       return;
     }
 
-    processHandle.onExit()
-      .thenAccept(h -> console.writeLine("进程已结束。"))
-      .exceptionally(t -> {
-        if (t instanceof TimeoutException) {
-          console.writeLine("进程结束超时，尝试强行结束");
-          var canDestroyForcibly = processHandle.destroyForcibly();
-          if (!canDestroyForcibly) {
-            console.writeLine("进程无法强行结束。");
-          }
-        }
-        return null;
-      })
-      .get(10, TimeUnit.SECONDS);
+    try {
+      processHandle.onExit()
+        .thenAccept(h -> console.writeLine("进程已结束。"))
+        .get(10, TimeUnit.SECONDS);
+    } catch (TimeoutException e) {
+      console.writeLine("进程结束超时，尝试强行结束");
+      var canDestroyForcibly = processHandle.destroyForcibly();
+      if (!canDestroyForcibly) {
+        console.writeLine("进程无法强行结束。");
+      }
+    }
   }
 }
