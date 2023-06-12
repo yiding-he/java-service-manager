@@ -2,10 +2,7 @@ package com.hyd.jsm.scenes;
 
 import com.hyd.jsm.Command;
 import com.hyd.jsm.Scene;
-import com.hyd.jsm.commands.JavaServiceLog;
-import com.hyd.jsm.commands.JavaServiceStart;
-import com.hyd.jsm.commands.JvmMemStat;
-import com.hyd.jsm.commands.ProcessKill;
+import com.hyd.jsm.commands.*;
 import com.hyd.jsm.config.JsmConf;
 import com.hyd.jsm.util.FileUtil;
 import com.hyd.jsm.util.Named;
@@ -16,6 +13,7 @@ import org.jline.utils.AttributedStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -44,6 +42,7 @@ public class ServiceInfoScene extends AbstractScene {
     commands.put("2", JvmMemStat.class);
     commands.put("3", ProcessKill.class);
     commands.put("4", JavaServiceLog.class);
+    commands.put("5", JavaServiceRestart.class);
   }
 
   public ServiceInfoScene setJavaService(JsmConf.JavaService javaService) {
@@ -101,14 +100,14 @@ public class ServiceInfoScene extends AbstractScene {
 
   @Override
   public Scene processCommand(ParsedLine line) {
-    var command = line.word().trim();
-    if (command.isEmpty()) {
+    var commandLine = line.word().trim();
+    if (commandLine.isEmpty()) {
       return null;
     }
 
-    var key = command.split("\\.")[0];
+    var key = commandLine.split("\\.")[0];
     if (!this.commands.containsKey(key)) {
-      console.writeLine("操作尚未实现：" + command);
+      console.writeLine("操作尚未实现：" + commandLine);
 
     } else {
       Class<? extends Command> commandType = this.commands.get(key);
@@ -117,8 +116,11 @@ public class ServiceInfoScene extends AbstractScene {
         return null;
       }
       try {
-        var commandObj = getBean(commandType);
-        commandObj.execute(line, this.processHandle);
+        var commandInstance = getBean(commandType);
+        var result = commandInstance.execute(line, this.processHandle);
+        if (StringUtils.hasText(result.getMessage())) {
+            console.writeLine(result.getMessage());
+        }
       } catch (Exception e) {
         log.error("", e);
       }

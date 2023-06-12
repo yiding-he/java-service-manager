@@ -1,6 +1,7 @@
 package com.hyd.jsm.commands;
 
 import com.hyd.jsm.util.Named;
+import com.hyd.jsm.util.Result;
 import org.jline.reader.ParsedLine;
 import org.springframework.stereotype.Component;
 
@@ -12,13 +13,12 @@ import java.util.concurrent.TimeoutException;
 public class ProcessKill extends AbstractCommand {
 
   @Override
-  public void execute(ParsedLine line, ProcessHandle processHandle) throws Exception {
+  public Result execute(ParsedLine line, ProcessHandle processHandle) throws Exception {
     console.writeLine("尝试终止进程（10秒后将强制结束进程）...");
 
     var requested = processHandle.destroy();
     if (!requested) {
-      console.writeLine("进程无法终止。");
-      return;
+      return Result.fail("进程无法终止。");
     }
 
     try {
@@ -29,8 +29,10 @@ public class ProcessKill extends AbstractCommand {
       console.writeLine("进程结束超时，尝试强行结束");
       var canDestroyForcibly = processHandle.destroyForcibly();
       if (!canDestroyForcibly) {
-        console.writeLine("进程无法强行结束。");
+        return Result.fail("进程无法强行结束。");
       }
     }
+
+    return Result.success();
   }
 }

@@ -1,10 +1,7 @@
 package com.hyd.jsm.commands;
 
 import com.hyd.jsm.scenes.ServiceInfoScene;
-import com.hyd.jsm.util.FileUtil;
-import com.hyd.jsm.util.Named;
-import com.hyd.jsm.util.ProcessCommandBuilder;
-import com.hyd.jsm.util.ProcessUtil;
+import com.hyd.jsm.util.*;
 import org.jline.reader.ParsedLine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -36,23 +33,20 @@ public class JavaServiceStart extends AbstractCommand {
   private ServiceInfoScene serviceInfoScene;
 
   @Override
-  public void execute(ParsedLine line, ProcessHandle processHandle) throws Exception {
+  public Result execute(ParsedLine line, ProcessHandle processHandle) throws Exception {
     if (processHandle != null && processHandle.isAlive()) {
-      console.writeError("服务已经在运行中。");
-      return;
+      return Result.fail("服务已经在运行中。");
     }
 
     var javaService = serviceInfoScene.getJavaService();
     var root = Path.of(javaService.getPath());
     if (!Files.exists(root)) {
-      console.writeError("服务路径 '" + javaService.getPath() + "' 不存在");
-      return;
+      return Result.fail("服务路径 '" + javaService.getPath() + "' 不存在");
     }
 
     var jarFiles = FileUtil.listFilesByExtension(root, "jar");
     if (jarFiles.isEmpty()) {
-      console.writeError("服务路径 '" + javaService.getPath() + "' 下暂无 jar 包");
-      return;
+      return Result.fail("服务路径 '" + javaService.getPath() + "' 下暂无 jar 包");
     }
 
     var execution = javaService.getExecution();
@@ -80,6 +74,7 @@ public class JavaServiceStart extends AbstractCommand {
 
     var commandString = String.join(" ", command);
 
+    console.writeLine("启动命令（供调试）:");
     console.writeLine("========================");
     console.writeLine(commandString);
     console.writeLine("========================");
@@ -95,9 +90,9 @@ public class JavaServiceStart extends AbstractCommand {
     Thread.sleep(3000);
     processHandle = ProcessUtil.findProcessByKeyword(jarFile.toString());
     if (processHandle != null) {
-      console.writeLine("服务成功启动。");
+      return Result.success("服务成功启动。");
     } else {
-      console.writeError("服务启动失败。");
+      return Result.fail("服务启动失败。");
     }
   }
 }

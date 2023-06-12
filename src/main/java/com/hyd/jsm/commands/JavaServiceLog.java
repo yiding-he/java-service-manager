@@ -2,11 +2,13 @@ package com.hyd.jsm.commands;
 
 import com.hyd.jsm.scenes.ServiceInfoScene;
 import com.hyd.jsm.util.Named;
+import com.hyd.jsm.util.Result;
 import org.jline.reader.ParsedLine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -19,18 +21,10 @@ public class JavaServiceLog extends AbstractCommand {
   private ServiceInfoScene serviceInfoScene;
 
   @Override
-  public void execute(ParsedLine line, ProcessHandle processHandle) throws Exception {
-
-    var javaService = serviceInfoScene.getJavaService();
-    var hostName = InetAddress.getLocalHost().getHostName();
-    var root = Path.of(javaService.getPath());
-    var logDir = root.resolve(javaService.getLogDir()).resolve(hostName).normalize().toAbsolutePath();
-    var logFileName = "server-" + hostName + ".log";
-    var logFilePath = logDir.resolve(logFileName);
-
+  public Result execute(ParsedLine line, ProcessHandle processHandle) throws Exception {
+    Path logFilePath = getLogFilePath();
     if (!Files.exists(logFilePath)) {
-      console.writeError("日志文件没有找到");
-      return;
+      return Result.fail("日志文件没有找到");
     }
 
     new ProcessBuilder(
@@ -40,5 +34,16 @@ public class JavaServiceLog extends AbstractCommand {
     ).redirectInput(
       ProcessBuilder.Redirect.PIPE
     ).start().waitFor();
+
+    return Result.success();
+  }
+
+  public Path getLogFilePath() throws UnknownHostException {
+    var javaService = serviceInfoScene.getJavaService();
+    var hostName = InetAddress.getLocalHost().getHostName();
+    var root = Path.of(javaService.getPath());
+    var logDir = root.resolve(javaService.getLogDir()).resolve(hostName).normalize().toAbsolutePath();
+    var logFileName = "server-" + hostName + ".log";
+    return logDir.resolve(logFileName);
   }
 }

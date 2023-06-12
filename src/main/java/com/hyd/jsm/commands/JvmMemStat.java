@@ -1,6 +1,7 @@
 package com.hyd.jsm.commands;
 
 import com.hyd.jsm.util.Named;
+import com.hyd.jsm.util.Result;
 import org.jline.reader.ParsedLine;
 import org.springframework.stereotype.Component;
 
@@ -11,11 +12,10 @@ import java.util.List;
 public class JvmMemStat extends AbstractCommand {
 
   @Override
-  public void execute(ParsedLine line, ProcessHandle processHandle) throws Exception {
+  public Result execute(ParsedLine line, ProcessHandle processHandle) throws Exception {
 
     if (processHandle == null || !processHandle.isAlive()) {
-      console.writeLine("进程已停止。");
-      return;
+      return Result.fail("进程已停止。");
     }
 
     new ProcessBuilder(
@@ -23,5 +23,7 @@ public class JvmMemStat extends AbstractCommand {
     ).redirectOutput(
       ProcessBuilder.Redirect.INHERIT
     ).start().waitFor();
+
+    return Result.success();
   }
 }
