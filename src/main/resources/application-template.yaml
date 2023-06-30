@@ -1,12 +1,15 @@
 jsm.services:
-  service1:
+  -
+    name: service1
     path: /home/java/service1/
     config-dir: config
     execution: java
     log-dir: logs
     jvm-args: "-Xms100m -Xmx1000m"
     app-args: "--spring.profiles.active=prod"
-  service2:
+  -
+    name: service2
     path: /home/java/service2/
-  service3:
+  -
+    name: service3
     path: /home/java/service3/
