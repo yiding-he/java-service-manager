@@ -37,10 +37,13 @@ public class JavaServiceLog extends AbstractCommand {
     ).start();
 
     try {
-      console.setSignalHandler(Terminal.Signal.INT, signal -> process.destroyForcibly());
+      console.setSignalHandler(Terminal.Signal.INT, signal -> {
+        process.destroyForcibly();
+      });
       process.waitFor();
     } finally {
       console.setSignalHandler(Terminal.Signal.INT, null);
+      console.writeLine("结束查看日志");   // 对齐输出
     }
 
     return Result.success();

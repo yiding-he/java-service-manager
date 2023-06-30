@@ -2,8 +2,8 @@ package com.hyd.jsm.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 @ConfigurationProperties(prefix = "jsm")
 public class JsmConf {
@@ -81,13 +81,13 @@ public class JsmConf {
     }
   }
 
-  private Map<String, JavaService> services = new HashMap<>();
+  private List<JavaService> services = new ArrayList<>();
 
-  public Map<String, JavaService> getServices() {
+  public List<JavaService> getServices() {
     return services;
   }
 
-  public void setServices(Map<String, JavaService> services) {
+  public void setServices(List<JavaService> services) {
     this.services = services;
   }
 }

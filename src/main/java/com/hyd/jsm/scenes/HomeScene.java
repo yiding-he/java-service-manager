@@ -26,9 +26,8 @@ public class HomeScene extends AbstractScene {
       .append("检查配置...\n")
       .append("已读取 ").append(jsmConf.getServices().size()).append(" 个 Java 服务配置：\n");
 
-    jsmConf.getServices().forEach((serviceName, service) -> {
-      service.setName(serviceName);
-      sb.append("  * ").append(serviceName).append(" : ").append(service.getPath()).append("\n");
+    jsmConf.getServices().forEach((service) -> {
+      sb.append("  * ").append(service.getName()).append(" : ").append(service.getPath()).append("\n");
     });
 
     return sb.toString();
@@ -43,15 +42,17 @@ public class HomeScene extends AbstractScene {
 
   @Override
   public List<String> getSelections() {
-    return jsmConf.getServices().keySet().stream().sorted().collect(Collectors.toList());
+    return jsmConf.getServices().stream()
+      .map(JsmConf.JavaService::getName)
+      .collect(Collectors.toList());
   }
 
   @Override
   public Scene processCommand(ParsedLine line) {
-    if (jsmConf.getServices().containsKey(line.word())) {
-      return serviceInfoScene.setJavaService(jsmConf.getServices().get(line.word()));
-    } else {
-      return null;
-    }
+    return jsmConf.getServices().stream()
+      .filter(s -> s.getName().equals(line.word()))
+      .findFirst()
+      .map(s -> serviceInfoScene.setJavaService(s))
+      .orElse(null);
   }
 }
