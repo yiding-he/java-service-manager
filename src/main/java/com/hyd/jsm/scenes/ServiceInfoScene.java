@@ -64,11 +64,11 @@ public class ServiceInfoScene extends AbstractScene {
     processHandle = findProcessByKeyword(FileUtil.join(servicePath, "config"));
 
     var greetings = new ArrayList<>(List.of("你选择了服务：" + javaService.getName()));
-    greetings.add("运行路径：" + javaService.getPath());
+    greetings.add("  运行路径：" + javaService.getPath());
 
     if (processHandleAvailable()) {
-      greetings.add("进程ID：" + processHandle.pid());
-      greetings.add("进程运行时间：" +
+      greetings.add("  进程ID：" + processHandle.pid());
+      greetings.add("  进程运行时间：" +
         processHandle.info().startInstant()
           .map(i -> ZonedDateTime.ofInstant(i, ZoneId.systemDefault()))
           .map(DATE_TIME_FORMATTER::format)
@@ -77,7 +77,7 @@ public class ServiceInfoScene extends AbstractScene {
       greetings.add("服务没有运行。");
     }
 
-    greetings.add("按 TAB 查看可用操作。");
+    greetings.add("按 TAB 查看可用操作，输入 \"..\" 回到服务选择，输入 \"exit\" 退出管理工具。");
     return String.join("\n",greetings);
   }
 

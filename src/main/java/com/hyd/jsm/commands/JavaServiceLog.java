@@ -4,6 +4,7 @@ import com.hyd.jsm.scenes.ServiceInfoScene;
 import com.hyd.jsm.util.Named;
 import com.hyd.jsm.util.Result;
 import org.jline.reader.ParsedLine;
+import org.jline.terminal.Terminal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -27,13 +28,20 @@ public class JavaServiceLog extends AbstractCommand {
       return Result.fail("日志文件没有找到");
     }
 
-    new ProcessBuilder(
+    var process = new ProcessBuilder(
       List.of("tail", "-fn300", logFilePath.toString())
     ).redirectOutput(
       ProcessBuilder.Redirect.INHERIT
     ).redirectInput(
       ProcessBuilder.Redirect.PIPE
-    ).start().waitFor();
+    ).start();
+
+    try {
+      console.setSignalHandler(Terminal.Signal.INT, signal -> process.destroyForcibly());
+      process.waitFor();
+    } finally {
+      console.setSignalHandler(Terminal.Signal.INT, null);
+    }
 
     return Result.success();
   }

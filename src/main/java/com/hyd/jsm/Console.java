@@ -15,10 +15,11 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 @Component
 public class Console {
@@ -31,13 +32,31 @@ public class Console {
 
   private final LinkedList<Scene> scenes = new LinkedList<>();
 
+  private final Map<Terminal.Signal, Terminal.SignalHandler> signalHandlers = new HashMap<>();
+
   private Terminal terminal;
 
   private LineReader lineReader;
 
+  public void setSignalHandler(Terminal.Signal signal, Terminal.SignalHandler signalHandler) {
+    if (signalHandler != null) {
+      this.signalHandlers.put(signal, signalHandler);
+    } else {
+      this.signalHandlers.remove(signal);
+    }
+  }
+
   @PostConstruct
   private void init() throws IOException {
-    this.terminal = TerminalBuilder.terminal();
+    this.terminal = TerminalBuilder.builder()
+      .nativeSignals(true)
+      .signalHandler(signal -> {
+        var handler = Console.this.signalHandlers.get(signal);
+        if (handler != null) {
+          handler.handle(signal);
+        }
+      })
+      .build();
     this.lineReader = LineReaderBuilder.builder()
       .terminal(terminal)
       .completer(new StringsCompleter(() -> {
