@@ -1,11 +1,10 @@
 package com.hyd.jsm.commands;
 
-import com.hyd.jsm.scenes.ServiceInfoScene;
+import com.hyd.jsm.CommandArgs;
+import com.hyd.jsm.CurrentContext;
 import com.hyd.jsm.util.Named;
 import com.hyd.jsm.util.Result;
-import org.jline.reader.ParsedLine;
 import org.jline.terminal.Terminal;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.InetAddress;
@@ -18,11 +17,8 @@ import java.util.List;
 @Named("查看日志")
 public class JavaServiceLog extends AbstractCommand {
 
-  @Autowired
-  private ServiceInfoScene serviceInfoScene;
-
   @Override
-  public Result execute(ParsedLine line, ProcessHandle processHandle) throws Exception {
+  public Result execute(CommandArgs args) throws Exception {
     Path logFilePath = getLogFilePath();
     if (!Files.exists(logFilePath)) {
       return Result.fail("日志文件没有找到");
@@ -43,14 +39,14 @@ public class JavaServiceLog extends AbstractCommand {
       process.waitFor();
     } finally {
       console.setSignalHandler(Terminal.Signal.INT, null);
-      console.writeLine("结束查看日志");   // 对齐输出
+      console.writeLine("\n结束查看日志");
     }
 
     return Result.success();
   }
 
   public Path getLogFilePath() throws UnknownHostException {
-    var javaService = serviceInfoScene.getJavaService();
+    var javaService = CurrentContext.currentJavaService;
     var hostName = InetAddress.getLocalHost().getHostName();
     var root = Path.of(javaService.getPath());
     var logDir = root.resolve(javaService.getLogDir()).resolve(hostName).normalize().toAbsolutePath();

@@ -1,20 +1,23 @@
 package com.hyd.jsm.commands;
 
+import com.hyd.jsm.CommandArgs;
 import com.hyd.jsm.util.Named;
 import com.hyd.jsm.util.Result;
-import org.jline.reader.ParsedLine;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
 import java.util.List;
+
+import static com.hyd.jsm.CurrentContext.currentProcessHandle;
 
 @Component
 @Named("查看堆内存")
 public class JvmMemStat extends AbstractCommand {
 
   @Override
-  public Result execute(ParsedLine line, ProcessHandle processHandle) throws Exception {
+  public Result execute(CommandArgs args) throws Exception {
 
+    var processHandle = currentProcessHandle;
     if (processHandle == null || !processHandle.isAlive()) {
       return Result.fail("进程已停止。");
     }

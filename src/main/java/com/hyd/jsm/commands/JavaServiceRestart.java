@@ -1,10 +1,12 @@
 package com.hyd.jsm.commands;
 
+import com.hyd.jsm.CommandArgs;
 import com.hyd.jsm.util.Named;
 import com.hyd.jsm.util.Result;
-import org.jline.reader.ParsedLine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import static com.hyd.jsm.CurrentContext.currentProcessHandle;
 
 @Component
 @Named("重新启动")
@@ -20,16 +22,16 @@ public class JavaServiceRestart extends AbstractCommand {
   private JavaServiceLog javaServiceLog;
 
   @Override
-  public Result execute(ParsedLine line, ProcessHandle processHandle) throws Exception {
-    var killResult = processKill.execute(line, processHandle);
+  public Result execute(CommandArgs args) throws Exception {
+    var killResult = processKill.execute(args);
     if (!killResult.isSuccess()) {
       console.writeLine("结束进程失败: " + killResult.getMessage());
-      if (processHandle.isAlive()) {
+      if (currentProcessHandle.isAlive()) {
         return killResult;
       }
     }
 
-    var startResult = javaServiceStart.execute(line, processHandle);
+    var startResult = javaServiceStart.execute(args);
     if (!startResult.isSuccess()) {
       return startResult;
     }

@@ -1,135 +1,75 @@
 package com.hyd.jsm.scenes;
 
 import com.hyd.jsm.Command;
-import com.hyd.jsm.Scene;
-import com.hyd.jsm.commands.*;
-import com.hyd.jsm.config.JsmConf;
+import com.hyd.jsm.CurrentContext;
+import com.hyd.jsm.cli.Text;
+import com.hyd.jsm.commands.JavaServiceLog;
+import com.hyd.jsm.commands.JvmMemStat;
 import com.hyd.jsm.util.FileUtil;
-import com.hyd.jsm.util.Named;
-import com.hyd.jsm.util.ProcessUtil;
-import org.jline.reader.ParsedLine;
-import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
+import static com.hyd.jsm.CurrentContext.currentProcessHandle;
 import static com.hyd.jsm.util.ProcessUtil.findProcessByKeyword;
 
 @Component
 public class ServiceInfoScene extends AbstractScene {
 
-  private static final Logger log = LoggerFactory.getLogger(ServiceInfoScene.class);
-
   public static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-  private JsmConf.JavaService javaService;
+  @Autowired
+  private JavaServiceLog javaServiceLog;
 
-  private ProcessHandle processHandle;
+  @Autowired
+  private JvmMemStat jvmMemStat;
 
-  private final Map<String, Class<? extends Command>> commands = new HashMap<>();
+  @Autowired
+  private ProcessManagementScene processManagementScene;
 
-  {
-    commands.put("1", JavaServiceStart.class);
-    commands.put("2", JvmMemStat.class);
-    commands.put("3", ProcessKill.class);
-    commands.put("4", JavaServiceLog.class);
-    commands.put("5", JavaServiceRestart.class);
-  }
-
-  public ServiceInfoScene setJavaService(JsmConf.JavaService javaService) {
-    this.javaService = javaService;
-    return this;
-  }
-
-  private boolean processHandleAvailable() {
-    return processHandle != null && processHandle.isAlive();
-  }
-
-  public JsmConf.JavaService getJavaService() {
-    return javaService;
+  public static boolean processHandleAvailable() {
+    return currentProcessHandle != null && currentProcessHandle.isAlive();
   }
 
   @Override
   public String greetings() {
+    var javaService = CurrentContext.currentJavaService;
     var servicePath = javaService.getPath();
-    processHandle = findProcessByKeyword(FileUtil.join(servicePath, "config"));
+    currentProcessHandle = findProcessByKeyword(FileUtil.join(servicePath, "config"));
 
     var greetings = new ArrayList<>(List.of("你选择了服务：" + javaService.getName()));
     greetings.add("  运行路径：" + javaService.getPath());
 
     if (processHandleAvailable()) {
-      greetings.add("  进程ID：" + processHandle.pid());
+      greetings.add("  进程ID：" + currentProcessHandle.pid());
       greetings.add("  进程运行时间：" +
-        processHandle.info().startInstant()
-          .map(i -> ZonedDateTime.ofInstant(i, ZoneId.systemDefault()))
-          .map(DATE_TIME_FORMATTER::format)
-          .orElse("未知"));
+                    currentProcessHandle.info().startInstant()
+                      .map(i -> ZonedDateTime.ofInstant(i, ZoneId.systemDefault()))
+                      .map(DATE_TIME_FORMATTER::format)
+                      .orElse("未知"));
     } else {
       greetings.add("服务没有运行。");
     }
 
     greetings.add("按 TAB 查看可用操作，输入 \"..\" 回到服务选择，输入 \"exit\" 退出管理工具。");
-    return String.join("\n",greetings);
+    return String.join("\n", greetings);
   }
 
   @Override
-  public AttributedStringBuilder getPrompt() {
+  public Text getPrompt() {
     var color = processHandleAvailable() ? AttributedStyle.GREEN : AttributedStyle.RED;
-    return new AttributedStringBuilder()
-      .style(AttributedStyle.DEFAULT.foreground(color))
-      .append(this.javaService.getName())
-      .append("> ");
+    return Text.of(CurrentContext.currentJavaService.getName()).color(color);
   }
 
   @Override
-  public List<String> getSelections() {
-    return this.commands.entrySet().stream()
-      .sorted(Comparator.comparing(entry -> Integer.parseInt(entry.getKey())))
-      .map(entry -> entry.getKey() + "." + entry.getValue().getAnnotation(Named.class).value())
-      .collect(Collectors.toList());
+  public List<Command> getAvailableCommands() {
+    return List.of(jvmMemStat, javaServiceLog, processManagementScene);
   }
 
-  @Override
-  public Scene processCommand(ParsedLine line) {
-    var commandLine = line.word().trim();
-    if (commandLine.isEmpty()) {
-      return null;
-    }
-
-    var key = commandLine.split("\\.")[0];
-    if (!this.commands.containsKey(key)) {
-      console.writeLine("操作尚未实现：" + commandLine);
-
-    } else {
-      Class<? extends Command> commandType = this.commands.get(key);
-      if (processUnavailable() && commandType != JavaServiceStart.class) {
-        console.writeLine("服务不在运行状态");
-        return null;
-      }
-      try {
-        var commandInstance = getBean(commandType);
-        var result = commandInstance.execute(line, this.processHandle);
-        if (StringUtils.hasText(result.getMessage())) {
-            console.writeLine(result.getMessage());
-        }
-      } catch (Exception e) {
-        log.error("", e);
-      }
-    }
-
-    return null;
-  }
-
-  private boolean processUnavailable() {
-    return processHandle == null || !processHandle.isAlive();
-  }
 }

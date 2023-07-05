@@ -1,6 +1,6 @@
 package com.hyd.jsm;
 
-import org.jline.keymap.BindingReader;
+import com.hyd.jsm.util.Result;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.jline.reader.ParsedLine;
@@ -16,10 +16,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.io.IOException;
 import java.net.InetAddress;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Component
 public class Console {
@@ -63,15 +61,23 @@ public class Console {
         if (this.scenes.isEmpty()) {
           return Collections.emptyList();
         } else {
-          return this.scenes.getLast().getSelections();
+          return this.scenes.getLast().availableCommandNames();
         }
       }))
       .build();
   }
 
+  public void writeLine() {
+    writeLine(null);
+  }
+
   public void writeLine(String s) {
     var writer = this.terminal.writer();
-    writer.println(s);
+    if (s != null) {
+      writer.println(s);
+    } else {
+      writer.println();
+    }
     writer.flush();
   }
 
@@ -81,10 +87,6 @@ public class Console {
         .style(AttributedStyle.DEFAULT.foreground(AttributedStyle.RED))
         .append(s).toAnsi()
     );
-  }
-
-  public BindingReader newBindingReader() {
-    return new BindingReader(this.terminal.reader());
   }
 
   public void start(Scene startScene) {
@@ -109,7 +111,16 @@ public class Console {
   }
 
   private String generatePrompt() {
-    return this.scenes.getLast().getPrompt().toAnsi();
+    return this.scenes.stream()
+             .map(scene -> {
+               if (scene.getPrompt() != null) {
+                 return scene.getPrompt().value().toAnsi();
+               } else {
+                 return null;
+               }
+             })
+             .filter(Objects::nonNull)
+             .collect(Collectors.joining("/")) + " > ";
   }
 
   private ProcessResult processCommand(Scene scene, ParsedLine parsedLine) {
@@ -124,7 +135,22 @@ public class Console {
       return ProcessResult.SUCCESS;
     }
 
-    var nextScene = scene.processCommand(parsedLine);
+    writeLine();  // For readability
+    Result result;
+    try {
+      result = scene.execute(new CommandArgs(parsedLine));
+    } catch (Exception e) {
+      e.printStackTrace();
+      result = Result.fail(e.getMessage());
+    }
+    if (result.getMessage() != null && !result.getMessage().isBlank()) {
+      if (!result.isSuccess()) {
+        writeError(result.getMessage());
+      } else {
+        writeLine(result.getMessage());
+      }
+    }
+    var nextScene = result.getScene();
     if (nextScene == null) {
       return ProcessResult.REPEAT;
     } else {

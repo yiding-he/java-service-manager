@@ -1,5 +1,7 @@
 package com.hyd.jsm.util;
 
+import com.hyd.jsm.Scene;
+
 public class Result {
 
   public static Result success() {
@@ -18,9 +20,20 @@ public class Result {
 
   private final String message;
 
+  private Scene scene;
+
   public Result(boolean success, String message) {
     this.success = success;
     this.message = message;
+  }
+
+  public Result scene(Scene scene) {
+    this.scene = scene;
+    return this;
+  }
+
+  public Scene getScene() {
+    return scene;
   }
 
   public String getMessage() {

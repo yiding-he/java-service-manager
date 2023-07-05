@@ -1,9 +1,8 @@
 package com.hyd.jsm.commands;
 
-import com.hyd.jsm.scenes.ServiceInfoScene;
+import com.hyd.jsm.CommandArgs;
+import com.hyd.jsm.CurrentContext;
 import com.hyd.jsm.util.*;
-import org.jline.reader.ParsedLine;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -11,6 +10,8 @@ import java.net.InetAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+
+import static com.hyd.jsm.CurrentContext.currentProcessHandle;
 
 @Component
 @Named("启动进程")
@@ -29,16 +30,14 @@ public class JavaServiceStart extends AbstractCommand {
     "${app_args}"
   );
 
-  @Autowired
-  private ServiceInfoScene serviceInfoScene;
-
   @Override
-  public Result execute(ParsedLine line, ProcessHandle processHandle) throws Exception {
+  public Result execute(CommandArgs args) throws Exception {
+    var processHandle = currentProcessHandle;
     if (processHandle != null && processHandle.isAlive()) {
       return Result.fail("服务已经在运行中。");
     }
 
-    var javaService = serviceInfoScene.getJavaService();
+    var javaService = CurrentContext.currentJavaService;
     var root = Path.of(javaService.getPath());
     if (!Files.exists(root)) {
       return Result.fail("服务路径 '" + javaService.getPath() + "' 不存在");
@@ -90,6 +89,7 @@ public class JavaServiceStart extends AbstractCommand {
     Thread.sleep(3000);
     processHandle = ProcessUtil.findProcessByKeyword(jarFile.toString());
     if (processHandle != null) {
+      currentProcessHandle = processHandle;
       return Result.success("服务成功启动。");
     } else {
       return Result.fail("服务启动失败。");
