@@ -3,6 +3,7 @@ package com.hyd.jsm.scenes;
 import com.hyd.jsm.CommandArgs;
 import com.hyd.jsm.Console;
 import com.hyd.jsm.Scene;
+import com.hyd.jsm.cli.Text;
 import com.hyd.jsm.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -24,5 +25,10 @@ public abstract class AbstractScene implements Scene {
     } else {
       return command.execute(args);
     }
+  }
+
+  @Override
+  public Text getPrompt() {
+    return Text.of(getName());
   }
 }

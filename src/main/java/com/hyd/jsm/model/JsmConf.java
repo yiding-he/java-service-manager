@@ -1,4 +1,4 @@
-package com.hyd.jsm.config;
+package com.hyd.jsm.model;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -18,11 +18,21 @@ public class JsmConf {
 
     private String configDir = "config";
 
+    private String backupDir = "backups";
+
     private String logDir = "logs";
 
     private String jvmArgs;
 
     private String appArgs;
+
+    public String getBackupDir() {
+      return backupDir;
+    }
+
+    public void setBackupDir(String backupDir) {
+      this.backupDir = backupDir;
+    }
 
     public String getExecution() {
       return execution;

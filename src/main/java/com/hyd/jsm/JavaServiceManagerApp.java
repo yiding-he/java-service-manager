@@ -1,6 +1,6 @@
 package com.hyd.jsm;
 
-import com.hyd.jsm.config.JsmConf;
+import com.hyd.jsm.model.JsmConf;
 import com.hyd.jsm.scenes.HomeScene;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;

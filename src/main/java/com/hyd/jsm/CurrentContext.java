@@ -1,6 +1,6 @@
 package com.hyd.jsm;
 
-import com.hyd.jsm.config.JsmConf;
+import com.hyd.jsm.model.JsmConf;
 
 public class CurrentContext {
 

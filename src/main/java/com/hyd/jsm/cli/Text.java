@@ -6,6 +6,10 @@ import org.jline.utils.AttributedStyle;
 
 public class Text {
 
+  public static Text of(Object obj) {
+    return of(String.valueOf(obj));
+  }
+
   public static Text of(String text) {
     Text textObj = new Text();
     textObj.text = text;
@@ -26,6 +30,10 @@ public class Text {
       .style(this.attributedStyle)
       .append(this.text)
       .toAttributedString();
+  }
+
+  public String getText() {
+    return text;
   }
 
   public Text bold() {

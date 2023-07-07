@@ -1,6 +1,7 @@
-package com.hyd.jsm.commands;
+package com.hyd.jsm.commands.process;
 
 import com.hyd.jsm.CommandArgs;
+import com.hyd.jsm.commands.AbstractCommand;
 import com.hyd.jsm.util.Named;
 import com.hyd.jsm.util.Result;
 import org.springframework.stereotype.Component;

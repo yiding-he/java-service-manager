@@ -4,7 +4,7 @@ import com.hyd.jsm.Command;
 import com.hyd.jsm.CommandArgs;
 import com.hyd.jsm.CurrentContext;
 import com.hyd.jsm.cli.Text;
-import com.hyd.jsm.config.JsmConf;
+import com.hyd.jsm.model.JsmConf;
 import com.hyd.jsm.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

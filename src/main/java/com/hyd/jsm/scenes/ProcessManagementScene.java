@@ -2,9 +2,9 @@ package com.hyd.jsm.scenes;
 
 import com.hyd.jsm.Command;
 import com.hyd.jsm.cli.Text;
-import com.hyd.jsm.commands.JavaServiceRestart;
-import com.hyd.jsm.commands.JavaServiceStart;
-import com.hyd.jsm.commands.ProcessKill;
+import com.hyd.jsm.commands.process.JavaServiceRestart;
+import com.hyd.jsm.commands.process.JavaServiceStart;
+import com.hyd.jsm.commands.process.ProcessKill;
 import com.hyd.jsm.util.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,11 +27,6 @@ public class ProcessManagementScene extends AbstractScene {
   @Override
   public String greetings() {
     return null;
-  }
-
-  @Override
-  public Text getPrompt() {
-    return Text.of(getName());
   }
 
   @Override

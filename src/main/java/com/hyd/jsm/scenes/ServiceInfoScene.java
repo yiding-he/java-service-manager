@@ -33,6 +33,9 @@ public class ServiceInfoScene extends AbstractScene {
   @Autowired
   private ProcessManagementScene processManagementScene;
 
+  @Autowired
+  private BackupScene backupScene;
+
   public static boolean processHandleAvailable() {
     return currentProcessHandle != null && currentProcessHandle.isAlive();
   }
@@ -69,7 +72,7 @@ public class ServiceInfoScene extends AbstractScene {
 
   @Override
   public List<Command> getAvailableCommands() {
-    return List.of(jvmMemStat, javaServiceLog, processManagementScene);
+    return List.of(jvmMemStat, javaServiceLog, processManagementScene, backupScene);
   }
 
 }
