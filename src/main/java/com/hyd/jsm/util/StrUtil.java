@@ -35,4 +35,12 @@ public class StrUtil {
     sb.append(" ".repeat(Math.max(0, width - widthOfString(s))));
     return sb.toString();
   }
+
+  public static int parseInt(String s, int defaultValue) {
+    try {
+      return Integer.parseInt(s);
+    } catch (NumberFormatException e) {
+      return defaultValue;
+    }
+  }
 }

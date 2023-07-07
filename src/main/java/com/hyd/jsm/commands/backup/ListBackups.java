@@ -20,8 +20,12 @@ import java.util.List;
 @Named("查看备份列表")
 public class ListBackups extends AbstractCommand {
 
-  @Override
-  public Result execute(CommandArgs args) throws Exception {
+  public static List<Backup> listBackups(boolean refresh) {
+
+    if (!refresh && CurrentContext.currentBackups != null) {
+      return CurrentContext.currentBackups;
+    }
+
     var javaService = CurrentContext.currentJavaService;
     var backups = new ArrayList<Backup>();
     var backupDir = Path.of(javaService.getPath(), javaService.getBackupDir());
@@ -32,11 +36,19 @@ public class ListBackups extends AbstractCommand {
       backups.add(new Backup(i + 1, backupFile));
     }
 
+    CurrentContext.currentBackups = backups;
+    return backups;
+  }
+
+  @Override
+  public Result execute(CommandArgs args) throws Exception {
+    List<Backup> backups = listBackups(true);
+
     var grid = new Grid();
     grid.setColumns(List.of(
       Text.of("编号").bold(),
       Text.of("名称").bold(),
-      Text.of("创建时间").bold(),
+      Text.of("文件修改时间").bold(),
       Text.of("大小").bold()
     ));
     for (Backup backup : backups) {

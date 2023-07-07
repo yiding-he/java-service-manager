@@ -49,7 +49,7 @@ public class HomeScene extends AbstractScene {
       .append("已读取 ").append(jsmConf.getServices().size()).append(" 个 Java 服务配置：\n");
 
     jsmConf.getServices().forEach((service) ->
-      sb.append("  * ").append(service.getName()).append(" : ").append(service.getPath()).append("\n"));
+      sb.append(Text.of(" * " + service.getName() + " : " + service.getPath()).yellow().value().toAnsi()).append("\n"));
 
     sb.append("按 TAB 选择服务。");
     return sb.toString();
