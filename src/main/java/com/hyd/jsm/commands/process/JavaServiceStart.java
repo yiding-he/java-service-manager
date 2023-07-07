@@ -3,6 +3,7 @@ package com.hyd.jsm.commands.process;
 import com.hyd.jsm.CommandArgs;
 import com.hyd.jsm.CurrentContext;
 import com.hyd.jsm.commands.AbstractCommand;
+import com.hyd.jsm.model.JsmConf;
 import com.hyd.jsm.util.*;
 import org.springframework.stereotype.Component;
 
@@ -17,6 +18,11 @@ import static com.hyd.jsm.CurrentContext.currentProcessHandle;
 @Component
 @Named("启动进程")
 public class JavaServiceStart extends AbstractCommand {
+
+  public static Path findJarFile(JsmConf.JavaService javaService) {
+    var dir = Path.of(javaService.getPath());
+    return FileUtil.listFilesByExtension(dir, "jar").stream().findFirst().orElse(null);
+  }
 
   public static final List<String> START_COMMAND_TEMPLATE = List.of(
     "${java_cmd}", "${jvm_args}",
@@ -44,13 +50,14 @@ public class JavaServiceStart extends AbstractCommand {
       return Result.fail("服务路径 '" + javaService.getPath() + "' 不存在");
     }
 
-    var jarFiles = FileUtil.listFilesByExtension(root, "jar");
-    if (jarFiles.isEmpty()) {
+    var jarFile = findJarFile(javaService);
+    if (jarFile == null) {
       return Result.fail("服务路径 '" + javaService.getPath() + "' 下暂无 jar 包");
+    } else {
+      jarFile = jarFile.normalize().toAbsolutePath();
     }
 
     var execution = javaService.getExecution();
-    var jarFile = jarFiles.get(0).normalize().toAbsolutePath();
     var hostName = InetAddress.getLocalHost().getHostName();
     var configDir = root.resolve(javaService.getConfigDir()).normalize().toAbsolutePath();
     var logDir = root.resolve(javaService.getLogDir()).resolve(hostName).normalize().toAbsolutePath();

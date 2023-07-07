@@ -8,7 +8,7 @@ public class Backup {
 
   private int index;
 
-  private String absolutePath;
+  private String fileName;
 
   private long lastModifiedTime;
 
@@ -19,7 +19,7 @@ public class Backup {
 
   public Backup(int index, Path path) {
     this.index = index;
-    this.absolutePath = path.toAbsolutePath().toString();
+    this.fileName = path.getFileName().toString();
     this.lastModifiedTime = FileUtil.getLastModifiedTime(path).toMillis();
     this.size = FileUtil.getFileSize(path);
   }
@@ -40,12 +40,12 @@ public class Backup {
     this.index = index;
   }
 
-  public String getAbsolutePath() {
-    return absolutePath;
+  public String getFileName() {
+    return fileName;
   }
 
-  public void setAbsolutePath(String absolutePath) {
-    this.absolutePath = absolutePath;
+  public void setFileName(String fileName) {
+    this.fileName = fileName;
   }
 
   public long getSize() {

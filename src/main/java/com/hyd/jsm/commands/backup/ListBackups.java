@@ -9,6 +9,7 @@ import com.hyd.jsm.structure.Grid;
 import com.hyd.jsm.util.FileUtil;
 import com.hyd.jsm.util.Named;
 import com.hyd.jsm.util.Result;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.stereotype.Component;
 
 import java.nio.file.Path;
@@ -41,8 +42,8 @@ public class ListBackups extends AbstractCommand {
     for (Backup backup : backups) {
       grid.getRows().add(List.of(
         Text.of(backup.getIndex()),
-        Text.of(backup.getAbsolutePath()),
-        Text.of(backup.getLastModifiedTime()),
+        Text.of(backup.getFileName()),
+        Text.of(DateFormatUtils.format(backup.getLastModifiedTime(), "yyyy-MM-dd HH:mm:ss")),
         Text.of(backup.getSize())
       ));
     }

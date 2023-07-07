@@ -52,5 +52,16 @@ public class Grid {
     }
     console.writeLine(header.toString());
     console.writeLine(StringUtils.repeat("-", StrUtil.widthOfString(header.toString())));
+
+    for (List<Text> row : rows) {
+      var line = new StringBuilder();
+      for (int i = 0; i < columns.size(); i++) {
+        line.append(StrUtil.rightPad(row.size() > i ? row.get(i).getText() : "", widths[i]));
+        if (i < columns.size() - 1) {
+          line.append("  ");
+        }
+      }
+      console.writeLine(line.toString());
+    }
   }
 }

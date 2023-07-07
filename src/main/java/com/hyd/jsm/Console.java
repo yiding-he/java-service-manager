@@ -139,6 +139,9 @@ public class Console {
     Result result;
     try {
       result = scene.execute(new CommandArgs(parsedLine));
+      if (result == null) {
+        result = Result.success();
+      }
     } catch (Exception e) {
       e.printStackTrace();
       result = Result.fail(e.getMessage());
