@@ -2,7 +2,6 @@ package com.hyd.jsm.commands.process;
 
 import com.hyd.jsm.CommandArgs;
 import com.hyd.jsm.commands.AbstractCommand;
-import com.hyd.jsm.commands.JavaServiceLog;
 import com.hyd.jsm.util.Named;
 import com.hyd.jsm.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +19,6 @@ public class JavaServiceRestart extends AbstractCommand {
   @Autowired
   private JavaServiceStart javaServiceStart;
 
-  @Autowired
-  private JavaServiceLog javaServiceLog;
-
   @Override
   public Result execute(CommandArgs args) throws Exception {
     var killResult = processKill.execute(args);
@@ -38,7 +34,6 @@ public class JavaServiceRestart extends AbstractCommand {
       return startResult;
     }
 
-    var logFilePath = javaServiceLog.getLogFilePath();
-    return Result.success("重新启动成功，请用下面的命令查看日志\ntail -fn300 " + logFilePath.toAbsolutePath());
+    return Result.success("重新启动成功。");
   }
 }

@@ -1,12 +1,69 @@
 package com.hyd.jsm.model;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 @ConfigurationProperties(prefix = "jsm")
 public class JsmConf {
+
+  public enum LogOutput {
+    /**
+     * Log will be printed to stdout.
+     */
+    STDOUT,
+    /**
+     * Log will be printed to files according to logging configuration.
+     */
+    FILE
+  }
+
+  public static class LogConf {
+
+    private LogOutput output = LogOutput.FILE;
+
+    private String logDir = "logs";
+
+    /**
+     * Override the default log file path if it is not
+     * under {@code [logDir]/[hostname]/server-[hostname].log}.
+     * {@link #logDir} will be ignored if this is set.
+     */
+    private String logFileOverride;
+
+    public LogOutput getOutput() {
+      return output;
+    }
+
+    public void setOutput(LogOutput output) {
+      this.output = output;
+    }
+
+    public String getLogDir() {
+      return logDir;
+    }
+
+    public void setLogDir(String logDir) {
+      this.logDir = logDir;
+    }
+
+    public String getLogFileOverride() {
+      return logFileOverride;
+    }
+
+    public void setLogFileOverride(String logFileOverride) {
+      this.logFileOverride = logFileOverride;
+    }
+
+    public boolean logFileOverrided() {
+      return StringUtils.isNotBlank(logFileOverride);
+    }
+  }
 
   public static class JavaService {
 
@@ -20,11 +77,19 @@ public class JsmConf {
 
     private String backupDir = "backups";
 
-    private String logDir = "logs";
-
     private String jvmArgs;
 
     private String appArgs;
+
+    private LogConf log = new LogConf();
+
+    public LogConf getLog() {
+      return log;
+    }
+
+    public void setLog(LogConf log) {
+      this.log = log;
+    }
 
     public String getBackupDir() {
       return backupDir;
@@ -66,14 +131,6 @@ public class JsmConf {
       this.configDir = configDir;
     }
 
-    public String getLogDir() {
-      return logDir;
-    }
-
-    public void setLogDir(String logDir) {
-      this.logDir = logDir;
-    }
-
     public String getName() {
       return name;
     }
@@ -100,4 +157,25 @@ public class JsmConf {
   public void setServices(List<JavaService> services) {
     this.services = services;
   }
+
+  ////////////////////////////////////////
+
+  public static Path getLogFilePath(JsmConf.JavaService javaService) throws UnknownHostException {
+
+    var logFilePathOverride = javaService.getLog().getLogFileOverride();
+    if (StringUtils.isNotBlank(logFilePathOverride)) {
+      return Path.of(logFilePathOverride);
+    }
+
+    var hostName = InetAddress.getLocalHost().getHostName();
+    var logFileName = "server-" + hostName + ".log";
+
+    return Path.of(
+      javaService.getPath(),
+      javaService.getLog().getLogDir(),
+      hostName,
+      logFileName
+    ).normalize().toAbsolutePath();
+  }
+
 }

@@ -19,6 +19,10 @@ import static com.hyd.jsm.CurrentContext.currentProcessHandle;
 @Named("启动进程")
 public class JavaServiceStart extends AbstractCommand {
 
+  public static final String DEV_NULL = "/dev/null";
+
+  public static final String DEFAULT_CONSOLE_OUTPUT = DEV_NULL;
+
   public static Path findJarFile(JsmConf.JavaService javaService) {
     var dir = Path.of(javaService.getPath());
     return FileUtil.listFilesByExtension(dir, "jar").stream().findFirst().orElse(null);
@@ -60,9 +64,9 @@ public class JavaServiceStart extends AbstractCommand {
     var execution = javaService.getExecution();
     var hostName = InetAddress.getLocalHost().getHostName();
     var configDir = root.resolve(javaService.getConfigDir()).normalize().toAbsolutePath();
-    var logDir = root.resolve(javaService.getLogDir()).resolve(hostName).normalize().toAbsolutePath();
-    var jvmArgs = javaService.getJvmArgs() == null? "": javaService.getJvmArgs();
-    var appArgs = javaService.getAppArgs() == null? "": javaService.getAppArgs();
+    var logDir = root.resolve(javaService.getLog().getLogDir()).resolve(hostName).normalize().toAbsolutePath();
+    var jvmArgs = javaService.getJvmArgs() == null ? "" : javaService.getJvmArgs();
+    var appArgs = javaService.getAppArgs() == null ? "" : javaService.getAppArgs();
 
     FileUtil.createDirIfNotExists(configDir);
     FileUtil.createDirIfNotExists(logDir);
@@ -87,11 +91,22 @@ public class JavaServiceStart extends AbstractCommand {
     console.writeLine("========================");
 
     console.writeLine("服务启动中...");
-    new ProcessBuilder("bash", "-c", "nohup " + commandString + " > /dev/null &")
+
+    // Redirect output from stdout to file.
+    var consoleOutput = DEFAULT_CONSOLE_OUTPUT;
+    if (javaService.getLog().getOutput() == JsmConf.LogOutput.STDOUT) {
+      if (javaService.getLog().logFileOverrided()) {
+        consoleOutput = Path.of(javaService.getLog().getLogFileOverride()).normalize().toAbsolutePath().toString();
+      } else {
+        consoleOutput = JsmConf.getLogFilePath(javaService).normalize().toAbsolutePath().toString();
+      }
+    }
+
+    new ProcessBuilder("bash", "-c", "nohup " + commandString + " > " + consoleOutput + " &")
       .directory(root.toFile())
-      .redirectError(new File("/dev/null"))
-      .redirectOutput(new File("/dev/null"))
-      .redirectInput(new File("/dev/null"))
+      .redirectError(new File(DEV_NULL))
+      .redirectOutput(new File(DEV_NULL))
+      .redirectInput(new File(DEV_NULL))
       .start();
 
     Thread.sleep(3000);

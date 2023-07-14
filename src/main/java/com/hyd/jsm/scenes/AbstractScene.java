@@ -4,6 +4,7 @@ import com.hyd.jsm.CommandArgs;
 import com.hyd.jsm.Console;
 import com.hyd.jsm.Scene;
 import com.hyd.jsm.cli.Text;
+import com.hyd.jsm.model.JsmConf;
 import com.hyd.jsm.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,6 +12,9 @@ public abstract class AbstractScene implements Scene {
 
   @Autowired
   protected Console console;
+
+  @Autowired
+  protected JsmConf jsmConf;
 
   @Override
   public Result execute(CommandArgs args) throws Exception {
