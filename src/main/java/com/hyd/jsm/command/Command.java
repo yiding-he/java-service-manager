@@ -1,4 +1,4 @@
-package com.hyd.jsm;
+package com.hyd.jsm.command;
 
 import com.hyd.jsm.util.Named;
 import com.hyd.jsm.util.Result;

@@ -1,10 +1,10 @@
-package com.hyd.jsm.scenes;
+package com.hyd.jsm.interactive.scenes;
 
-import com.hyd.jsm.Command;
+import com.hyd.jsm.command.Command;
 import com.hyd.jsm.CurrentContext;
-import com.hyd.jsm.cli.Text;
-import com.hyd.jsm.commands.JavaServiceLog;
-import com.hyd.jsm.commands.JvmMemStat;
+import com.hyd.jsm.components.Text;
+import com.hyd.jsm.command.commands.JavaServiceLog;
+import com.hyd.jsm.command.commands.JvmMemStat;
 import com.hyd.jsm.util.FileUtil;
 import org.jline.utils.AttributedStyle;
 import org.springframework.beans.factory.annotation.Autowired;

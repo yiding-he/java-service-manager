@@ -1,4 +1,4 @@
-package com.hyd.jsm.model;
+package com.hyd.jsm.domain;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -9,6 +9,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Configuration for Java Service Manager.
+ */
 @ConfigurationProperties(prefix = "jsm")
 public class JsmConf {
 

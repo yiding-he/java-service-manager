@@ -1,7 +1,8 @@
 package com.hyd.jsm;
 
-import com.hyd.jsm.model.Backup;
-import com.hyd.jsm.model.JsmConf;
+import com.hyd.jsm.interactive.Console;
+import com.hyd.jsm.domain.Backup;
+import com.hyd.jsm.domain.JsmConf;
 
 import java.util.List;
 

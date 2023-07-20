@@ -1,10 +1,9 @@
-package com.hyd.jsm.scenes;
+package com.hyd.jsm.interactive.scenes;
 
-import com.hyd.jsm.Command;
-import com.hyd.jsm.cli.Text;
-import com.hyd.jsm.commands.process.JavaServiceRestart;
-import com.hyd.jsm.commands.process.JavaServiceStart;
-import com.hyd.jsm.commands.process.ProcessKill;
+import com.hyd.jsm.command.Command;
+import com.hyd.jsm.command.commands.process.JavaServiceRestart;
+import com.hyd.jsm.command.commands.process.JavaServiceStart;
+import com.hyd.jsm.command.commands.process.ProcessKill;
 import com.hyd.jsm.util.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

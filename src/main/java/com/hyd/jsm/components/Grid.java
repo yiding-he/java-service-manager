@@ -1,6 +1,5 @@
-package com.hyd.jsm.structure;
+package com.hyd.jsm.components;
 
-import com.hyd.jsm.cli.Text;
 import com.hyd.jsm.util.StrUtil;
 import org.apache.commons.lang3.StringUtils;
 

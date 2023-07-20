@@ -1,14 +1,12 @@
-package com.hyd.jsm;
+package com.hyd.jsm.interactive;
 
-import com.hyd.jsm.cli.Text;
-import com.hyd.jsm.util.Result;
+import com.hyd.jsm.components.Text;
+import com.hyd.jsm.command.Command;
 import org.jline.reader.ParsedLine;
-import org.jline.utils.AttributedStringBuilder;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public interface Scene extends Command {
 

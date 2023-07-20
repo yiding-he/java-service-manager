@@ -1,10 +1,10 @@
-package com.hyd.jsm.scenes;
+package com.hyd.jsm.interactive.scenes;
 
-import com.hyd.jsm.CommandArgs;
-import com.hyd.jsm.Console;
-import com.hyd.jsm.Scene;
-import com.hyd.jsm.cli.Text;
-import com.hyd.jsm.model.JsmConf;
+import com.hyd.jsm.command.CommandArgs;
+import com.hyd.jsm.interactive.Console;
+import com.hyd.jsm.interactive.Scene;
+import com.hyd.jsm.components.Text;
+import com.hyd.jsm.domain.JsmConf;
 import com.hyd.jsm.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 

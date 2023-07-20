@@ -1,11 +1,11 @@
-package com.hyd.jsm.commands.backup;
+package com.hyd.jsm.command.commands.backup;
 
-import com.hyd.jsm.CommandArgs;
+import com.hyd.jsm.command.CommandArgs;
 import com.hyd.jsm.CurrentContext;
-import com.hyd.jsm.cli.Text;
-import com.hyd.jsm.commands.AbstractCommand;
-import com.hyd.jsm.model.Backup;
-import com.hyd.jsm.structure.Grid;
+import com.hyd.jsm.components.Text;
+import com.hyd.jsm.command.commands.AbstractCommand;
+import com.hyd.jsm.domain.Backup;
+import com.hyd.jsm.components.Grid;
 import com.hyd.jsm.util.FileUtil;
 import com.hyd.jsm.util.Named;
 import com.hyd.jsm.util.Result;

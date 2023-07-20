@@ -1,6 +1,6 @@
 package com.hyd.jsm.util;
 
-import com.hyd.jsm.Scene;
+import com.hyd.jsm.interactive.Scene;
 
 public class Result {
 

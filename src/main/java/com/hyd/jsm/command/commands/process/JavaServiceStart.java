@@ -1,9 +1,9 @@
-package com.hyd.jsm.commands.process;
+package com.hyd.jsm.command.commands.process;
 
-import com.hyd.jsm.CommandArgs;
+import com.hyd.jsm.command.CommandArgs;
 import com.hyd.jsm.CurrentContext;
-import com.hyd.jsm.commands.AbstractCommand;
-import com.hyd.jsm.model.JsmConf;
+import com.hyd.jsm.command.commands.AbstractCommand;
+import com.hyd.jsm.domain.JsmConf;
 import com.hyd.jsm.util.*;
 import org.springframework.stereotype.Component;
 

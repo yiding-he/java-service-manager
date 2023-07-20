@@ -1,4 +1,4 @@
-package com.hyd.jsm.model;
+package com.hyd.jsm.domain;
 
 import com.hyd.jsm.util.FileUtil;
 

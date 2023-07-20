@@ -1,4 +1,4 @@
-package com.hyd.jsm;
+package com.hyd.jsm.command;
 
 import org.jline.reader.ParsedLine;
 

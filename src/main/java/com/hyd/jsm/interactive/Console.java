@@ -1,5 +1,7 @@
-package com.hyd.jsm;
+package com.hyd.jsm.interactive;
 
+import com.hyd.jsm.CurrentContext;
+import com.hyd.jsm.command.CommandArgs;
 import com.hyd.jsm.util.Result;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;

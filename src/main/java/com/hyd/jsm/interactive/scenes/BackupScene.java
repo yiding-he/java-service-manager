@@ -1,9 +1,9 @@
-package com.hyd.jsm.scenes;
+package com.hyd.jsm.interactive.scenes;
 
-import com.hyd.jsm.Command;
-import com.hyd.jsm.commands.backup.CreateBackup;
-import com.hyd.jsm.commands.backup.ListBackups;
-import com.hyd.jsm.commands.backup.RestoreFromBackup;
+import com.hyd.jsm.command.Command;
+import com.hyd.jsm.command.commands.backup.CreateBackup;
+import com.hyd.jsm.command.commands.backup.ListBackups;
+import com.hyd.jsm.command.commands.backup.RestoreFromBackup;
 import com.hyd.jsm.util.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

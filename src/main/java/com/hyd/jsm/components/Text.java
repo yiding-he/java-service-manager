@@ -1,4 +1,4 @@
-package com.hyd.jsm.cli;
+package com.hyd.jsm.components;
 
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStringBuilder;
