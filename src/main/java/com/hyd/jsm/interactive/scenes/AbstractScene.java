@@ -1,17 +1,13 @@
 package com.hyd.jsm.interactive.scenes;
 
 import com.hyd.jsm.command.CommandArgs;
-import com.hyd.jsm.interactive.Console;
-import com.hyd.jsm.interactive.Scene;
 import com.hyd.jsm.components.Text;
 import com.hyd.jsm.domain.JsmConf;
+import com.hyd.jsm.interactive.Scene;
 import com.hyd.jsm.util.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public abstract class AbstractScene implements Scene {
-
-  @Autowired
-  protected Console console;
 
   @Autowired
   protected JsmConf jsmConf;
@@ -21,7 +17,7 @@ public abstract class AbstractScene implements Scene {
     var command = matchCommand(args.getParsedLine());
     if (command == null) {
       if (!args.getParsedLine().line().isBlank()) {
-        console.writeLine("操作尚未实现：" + args.getParsedLine().line());
+        args.println("操作尚未实现：" + args.getParsedLine().line());
       }
       return Result.success();
     } else if (command instanceof Scene) {
