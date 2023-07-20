@@ -31,7 +31,7 @@ public class CreateBackup extends AbstractCommand {
       jarFile.getFileName() + "-bak-" +
       DateFormatUtils.format(System.currentTimeMillis(), "yyyy-MM-dd-HHmmss"));
     Files.copy(jarFile, backupFile);
-    console.writeLine("备份文件创建完成: " + backupFile.getFileName());
+    args.println("备份文件创建完成: " + backupFile.getFileName());
     return Result.success();
   }
 }

@@ -12,4 +12,6 @@ public class CurrentContext {
   public static ProcessHandle currentProcessHandle;
 
   public static List<Backup> currentBackups;
+
+  public static Console currentConsole;
 }

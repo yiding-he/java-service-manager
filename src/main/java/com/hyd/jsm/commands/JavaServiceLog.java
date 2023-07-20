@@ -31,14 +31,17 @@ public class JavaServiceLog extends AbstractCommand {
       ProcessBuilder.Redirect.PIPE
     ).start();
 
-    try {
-      console.setSignalHandler(Terminal.Signal.INT, signal -> {
-        process.destroyForcibly();
-      });
-      process.waitFor();
-    } finally {
-      console.setSignalHandler(Terminal.Signal.INT, null);
-      console.writeLine("\n结束查看日志");
+    var console = CurrentContext.currentConsole;
+    if (console != null) {
+      try {
+        console.setSignalHandler(Terminal.Signal.INT, signal -> {
+          process.destroyForcibly();
+        });
+        process.waitFor();
+      } finally {
+        console.setSignalHandler(Terminal.Signal.INT, null);
+        console.writeLine("\n结束查看日志");
+      }
     }
 
     return Result.success();

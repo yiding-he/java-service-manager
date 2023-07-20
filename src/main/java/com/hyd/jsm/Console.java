@@ -46,6 +46,7 @@ public class Console {
 
   @PostConstruct
   private void init() throws IOException {
+    CurrentContext.currentConsole = this;
     this.terminal = TerminalBuilder.builder()
       .nativeSignals(true)
       .signalHandler(signal -> {
@@ -138,7 +139,7 @@ public class Console {
     writeLine();  // For readability
     Result result;
     try {
-      result = scene.execute(new CommandArgs(parsedLine));
+      result = scene.execute(new CommandArgs(parsedLine, this.terminal.writer()));
       if (result == null) {
         result = Result.success();
       }

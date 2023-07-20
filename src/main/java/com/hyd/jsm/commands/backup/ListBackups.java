@@ -59,10 +59,10 @@ public class ListBackups extends AbstractCommand {
         Text.of(backup.getSize())
       ));
     }
-    grid.printToConsole(console);
+    grid.printWith(args.getPrintWriter());
 
     if (backups.isEmpty()) {
-      console.writeLine("暂无备份数据。\n");
+      args.println("暂无备份数据。\n");
     }
 
     return Result.success();

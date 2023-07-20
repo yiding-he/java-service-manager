@@ -17,7 +17,7 @@ public class ProcessKill extends AbstractCommand {
 
   @Override
   public Result execute(CommandArgs args) throws Exception {
-    console.writeLine("尝试终止进程（10秒后将强制结束进程）...");
+    args.println("尝试终止进程（10秒后将强制结束进程）...");
 
     var processHandle = currentProcessHandle;
     var requested = processHandle.destroy();
@@ -27,10 +27,10 @@ public class ProcessKill extends AbstractCommand {
 
     try {
       processHandle.onExit()
-        .thenAccept(h -> console.writeLine("进程已结束。"))
+        .thenAccept(h -> args.println("进程已结束。"))
         .get(10, TimeUnit.SECONDS);
     } catch (TimeoutException e) {
-      console.writeLine("进程结束超时，尝试强行结束");
+      args.println("进程结束超时，尝试强行结束");
       var canDestroyForcibly = processHandle.destroyForcibly();
       if (!canDestroyForcibly) {
         return Result.fail("进程无法强行结束。");

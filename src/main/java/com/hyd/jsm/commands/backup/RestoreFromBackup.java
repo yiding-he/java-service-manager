@@ -9,7 +9,6 @@ import com.hyd.jsm.util.Result;
 import com.hyd.jsm.util.StrUtil;
 import org.springframework.stereotype.Component;
 
-import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -44,7 +43,7 @@ public class RestoreFromBackup extends AbstractCommand {
 
     var restorePath = JavaServiceStart.findJarFile(javaService);
     Files.copy(backupPath, restorePath, StandardCopyOption.REPLACE_EXISTING);
-    console.writeLine("已成功从备份 [" + index + "] '" + backup.getFileName() + "' 中恢复。");
+    args.println("已成功从备份 [" + index + "] '" + backup.getFileName() + "' 中恢复。");
     return Result.success();
   }
 }

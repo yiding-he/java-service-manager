@@ -23,7 +23,7 @@ public class JavaServiceRestart extends AbstractCommand {
   public Result execute(CommandArgs args) throws Exception {
     var killResult = processKill.execute(args);
     if (!killResult.isSuccess()) {
-      console.writeLine("结束进程失败: " + killResult.getMessage());
+      args.println("结束进程失败: " + killResult.getMessage());
       if (currentProcessHandle.isAlive()) {
         return killResult;
       }

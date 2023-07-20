@@ -85,12 +85,12 @@ public class JavaServiceStart extends AbstractCommand {
 
     var commandString = String.join(" ", command);
 
-    console.writeLine("启动命令（供调试）:");
-    console.writeLine("========================");
-    console.writeLine(commandString);
-    console.writeLine("========================");
+    args.println("启动命令（供调试）:");
+    args.println("========================");
+    args.println(commandString);
+    args.println("========================");
 
-    console.writeLine("服务启动中...");
+    args.println("服务启动中...");
 
     // Redirect output from stdout to file.
     var consoleOutput = DEFAULT_CONSOLE_OUTPUT;

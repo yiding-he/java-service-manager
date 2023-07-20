@@ -1,10 +1,10 @@
 package com.hyd.jsm.structure;
 
-import com.hyd.jsm.Console;
 import com.hyd.jsm.cli.Text;
 import com.hyd.jsm.util.StrUtil;
 import org.apache.commons.lang3.StringUtils;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +32,7 @@ public class Grid {
 
   ////////////////////////////////////////
 
-  public void printToConsole(Console console) {
+  public void printWith(PrintWriter printWriter) {
     var widths = new int[columns.size()];
     for (int i = 0; i < columns.size(); i++) {
       widths[i] = Math.max(widths[i], StrUtil.widthOfString(columns.get(i).getText()));
@@ -50,8 +50,8 @@ public class Grid {
         header.append("  ");
       }
     }
-    console.writeLine(header.toString());
-    console.writeLine(StringUtils.repeat("-", StrUtil.widthOfString(header.toString())));
+    printWriter.println(header.toString());
+    printWriter.println(StringUtils.repeat("-", StrUtil.widthOfString(header.toString())));
 
     for (List<Text> row : rows) {
       var line = new StringBuilder();
@@ -61,7 +61,7 @@ public class Grid {
           line.append("  ");
         }
       }
-      console.writeLine(line.toString());
+      printWriter.println(line.toString());
     }
   }
 }
