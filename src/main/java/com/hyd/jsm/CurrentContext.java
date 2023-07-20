@@ -1,6 +1,6 @@
 package com.hyd.jsm;
 
-import com.hyd.jsm.interactive.Console;
+import com.hyd.jsm.interactive.InteractiveConsole;
 import com.hyd.jsm.domain.Backup;
 import com.hyd.jsm.domain.JsmConf;
 
@@ -14,5 +14,5 @@ public class CurrentContext {
 
   public static List<Backup> currentBackups;
 
-  public static Console currentConsole;
+  public static InteractiveConsole currentConsole;
 }

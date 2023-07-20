@@ -95,7 +95,7 @@ public class JavaServiceStart extends AbstractCommand {
     // Redirect output from stdout to file.
     var consoleOutput = DEFAULT_CONSOLE_OUTPUT;
     if (javaService.getLog().getOutput() == JsmConf.LogOutput.STDOUT) {
-      if (javaService.getLog().logFileOverrided()) {
+      if (javaService.getLog().logFileOverridden()) {
         consoleOutput = Path.of(javaService.getLog().getLogFileOverride()).normalize().toAbsolutePath().toString();
       } else {
         consoleOutput = JsmConf.getLogFilePath(javaService).normalize().toAbsolutePath().toString();

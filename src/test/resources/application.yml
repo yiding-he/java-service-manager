@@ -1,0 +1,26 @@
+logging:
+  level:
+    root: error
+
+jsm.services:
+  -
+    name: service1
+    path: /home/java/service1/
+    execution: java
+    force-kill: true
+    config-dir: config
+    backup-dir: backups
+    jvm-args: "-Xms100m -Xmx1000m"
+    app-args: "--spring.profiles.active=prod"
+    log:
+      output: file
+      log-dir: logs
+  -
+    name: service2
+    path: /home/java/service2/
+    log:
+      output: stdout
+      log-file-override: logs/server.log
+  -
+    name: service3
+    path: /home/java/service3/

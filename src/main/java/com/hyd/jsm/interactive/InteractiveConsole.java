@@ -13,7 +13,6 @@ import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import java.io.IOException;
@@ -21,10 +20,12 @@ import java.net.InetAddress;
 import java.util.*;
 import java.util.stream.Collectors;
 
-@Component
-public class Console {
+/**
+ * 交互式功能框架
+ */
+public class InteractiveConsole {
 
-  private static final Logger log = LoggerFactory.getLogger(Console.class);
+  private static final Logger log = LoggerFactory.getLogger(InteractiveConsole.class);
 
   public enum ProcessResult {
     SUCCESS, REPEAT, TERMINATED
@@ -38,6 +39,10 @@ public class Console {
 
   private LineReader lineReader;
 
+  public InteractiveConsole() throws IOException {
+    init();
+  }
+
   public void setSignalHandler(Terminal.Signal signal, Terminal.SignalHandler signalHandler) {
     if (signalHandler != null) {
       this.signalHandlers.put(signal, signalHandler);
@@ -46,13 +51,12 @@ public class Console {
     }
   }
 
-  @PostConstruct
   private void init() throws IOException {
     CurrentContext.currentConsole = this;
     this.terminal = TerminalBuilder.builder()
       .nativeSignals(true)
       .signalHandler(signal -> {
-        var handler = Console.this.signalHandlers.get(signal);
+        var handler = InteractiveConsole.this.signalHandlers.get(signal);
         if (handler != null) {
           handler.handle(signal);
         }

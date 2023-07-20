@@ -63,7 +63,7 @@ public class JsmConf {
       this.logFileOverride = logFileOverride;
     }
 
-    public boolean logFileOverrided() {
+    public boolean logFileOverridden() {
       return StringUtils.isNotBlank(logFileOverride);
     }
   }
@@ -84,7 +84,19 @@ public class JsmConf {
 
     private String appArgs;
 
+    private boolean forceKill;
+
     private LogConf log = new LogConf();
+
+    ////////////////////////////////////////
+
+    public boolean isForceKill() {
+      return forceKill;
+    }
+
+    public void setForceKill(boolean forceKill) {
+      this.forceKill = forceKill;
+    }
 
     public LogConf getLog() {
       return log;
