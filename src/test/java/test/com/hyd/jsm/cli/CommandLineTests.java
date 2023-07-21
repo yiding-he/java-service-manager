@@ -13,7 +13,7 @@ public class CommandLineTests {
   @Test
   public void test2() throws Exception {
     JavaServiceManagerApp.main(new String[]{
-      "--service=service1", "--command"
+      "--service=service1", "--command", "start"
     });
   }
 }

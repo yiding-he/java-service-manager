@@ -38,7 +38,7 @@ public class CliArgs {
       return;
     }
     if (argValue == null) {
-      this.data.putIfAbsent(argName, emptyList());
+      this.data.putIfAbsent(argName, new ArrayList<>());
     } else {
       this.data.computeIfAbsent(argName, k -> new ArrayList<>()).add(argValue);
     }

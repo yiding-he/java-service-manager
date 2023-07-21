@@ -20,10 +20,15 @@ public class ProcessKill extends AbstractCommand {
 
   @Override
   public Result execute(CommandArgs args) throws Exception {
-    args.println("尝试终止进程（10秒后将强制结束进程）...");
-
     var processHandle = currentProcessHandle;
     var forceKill = currentJavaService.isForceKill();
+
+    if (processHandle == null) {
+      args.println("没有指定要停止的进程。");
+      return Result.success();
+    }
+
+    args.println("尝试终止进程（10秒后将强制结束进程）...");
 
     if (forceKill) {
       var canDestroyForcibly = processHandle.destroyForcibly();

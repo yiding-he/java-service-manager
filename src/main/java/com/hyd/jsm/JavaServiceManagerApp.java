@@ -25,7 +25,7 @@ public class JavaServiceManagerApp {
     instance = this;
   }
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) throws Exception {
     var applicationContext = SpringApplication.run(JavaServiceManagerApp.class, args);
     var cliArgs = new CliArgs(args);
     var interactive = !cliArgs.containsArg("command");
