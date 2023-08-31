@@ -82,6 +82,8 @@ public class JsmConf {
 
     private String jvmArgs;
 
+    private String mainClass;
+
     private String appArgs;
 
     private boolean forceKill;
@@ -89,6 +91,14 @@ public class JsmConf {
     private LogConf log = new LogConf();
 
     ////////////////////////////////////////
+
+    public String getMainClass() {
+      return mainClass;
+    }
+
+    public void setMainClass(String mainClass) {
+      this.mainClass = mainClass;
+    }
 
     public boolean isForceKill() {
       return forceKill;

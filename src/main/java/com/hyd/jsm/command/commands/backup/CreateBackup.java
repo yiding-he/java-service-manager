@@ -1,9 +1,9 @@
 package com.hyd.jsm.command.commands.backup;
 
-import com.hyd.jsm.command.CommandArgs;
 import com.hyd.jsm.CurrentContext;
+import com.hyd.jsm.command.CommandArgs;
 import com.hyd.jsm.command.commands.AbstractCommand;
-import com.hyd.jsm.command.commands.process.JavaServiceStart;
+import com.hyd.jsm.domain.project.AbstractJavaProject;
 import com.hyd.jsm.util.FileUtil;
 import com.hyd.jsm.util.Named;
 import com.hyd.jsm.util.Result;
@@ -20,7 +20,7 @@ public class CreateBackup extends AbstractCommand {
   @Override
   public Result execute(CommandArgs args) throws Exception {
     var javaService = CurrentContext.currentJavaService;
-    var jarFile = JavaServiceStart.findJarFile(javaService);
+    var jarFile = AbstractJavaProject.findJarFile(javaService);
     if (jarFile == null) {
       return Result.fail("没有找到需要备份的 jar 文件");
     }

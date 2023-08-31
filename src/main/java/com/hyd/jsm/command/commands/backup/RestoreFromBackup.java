@@ -1,9 +1,9 @@
 package com.hyd.jsm.command.commands.backup;
 
-import com.hyd.jsm.command.CommandArgs;
 import com.hyd.jsm.CurrentContext;
-import com.hyd.jsm.command.commands.process.JavaServiceStart;
+import com.hyd.jsm.command.CommandArgs;
 import com.hyd.jsm.command.commands.AbstractCommand;
+import com.hyd.jsm.domain.project.AbstractJavaProject;
 import com.hyd.jsm.util.Named;
 import com.hyd.jsm.util.Result;
 import com.hyd.jsm.util.StrUtil;
@@ -41,7 +41,7 @@ public class RestoreFromBackup extends AbstractCommand {
       return Result.fail("备份文件没有找到。");
     }
 
-    var restorePath = JavaServiceStart.findJarFile(javaService);
+    var restorePath = AbstractJavaProject.findJarFile(javaService);
     Files.copy(backupPath, restorePath, StandardCopyOption.REPLACE_EXISTING);
     args.println("已成功从备份 [" + index + "] '" + backup.getFileName() + "' 中恢复。");
     return Result.success();
