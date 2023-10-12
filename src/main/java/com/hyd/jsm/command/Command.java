@@ -24,7 +24,7 @@ public interface Command {
 
   default boolean match(ParsedLine line) {
     var split = line.words().get(0).split("\\.", 2);
-    return split.length >= 2 && split[1].startsWith(getName());
+    return split.length >= 2 && split[1].equals(getName());
   }
 
   default String getName() {

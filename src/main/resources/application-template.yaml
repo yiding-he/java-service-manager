@@ -15,7 +15,7 @@ jsm.services:
       output: file
       log-dir: logs
   -
-    name: service2
+    name: service1-manager
     path: /home/java/service2/
     log:
       output: stdout
