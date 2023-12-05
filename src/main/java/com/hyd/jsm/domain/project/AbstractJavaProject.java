@@ -36,7 +36,17 @@ public abstract class AbstractJavaProject {
 
   public static Path findJarFile(JsmConf.JavaService javaService) {
     var dir = Path.of(javaService.getPath());
-    return FileUtil.listFilesByExtension(dir, "jar").stream().findFirst().orElse(null);
+    return findJarFile(dir);
+  }
+
+  public static Path findUpgradeJarFile(JsmConf.JavaService javaService) {
+    var dir = Path.of(javaService.getPath()).resolve("upgrade");
+    return findJarFile(dir);
+  }
+
+  private static Path findJarFile(Path dir) {
+    return Files.exists(dir)?
+      FileUtil.listFilesByExtension(dir, "jar").stream().findFirst().orElse(null) : null;
   }
 
   protected final JsmConf.JavaService javaService;

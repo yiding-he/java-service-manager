@@ -42,5 +42,6 @@ public class CommandArgs {
 
   public void println(Object obj) {
     this.printWriter.println(obj);
+    this.printWriter.flush();
   }
 }

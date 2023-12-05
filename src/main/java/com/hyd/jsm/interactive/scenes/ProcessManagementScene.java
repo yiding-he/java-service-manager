@@ -3,6 +3,7 @@ package com.hyd.jsm.interactive.scenes;
 import com.hyd.jsm.command.Command;
 import com.hyd.jsm.command.commands.process.JavaServiceRestart;
 import com.hyd.jsm.command.commands.process.JavaServiceStart;
+import com.hyd.jsm.command.commands.process.JavaServiceUpgrade;
 import com.hyd.jsm.command.commands.process.ProcessKill;
 import com.hyd.jsm.util.Named;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class ProcessManagementScene extends AbstractScene {
   @Autowired
   private JavaServiceRestart javaServiceRestart;
 
+  @Autowired
+  private JavaServiceUpgrade javaServiceUpgrade;
+
   @Override
   public String greetings() {
     return null;
@@ -31,7 +35,7 @@ public class ProcessManagementScene extends AbstractScene {
   @Override
   public List<Command> getAvailableCommands() {
     return ServiceInfoScene.processHandleAvailable() ?
-      List.of(processKill, javaServiceRestart) :
-      List.of(javaServiceStart);
+      List.of(processKill, javaServiceRestart, javaServiceUpgrade) :
+      List.of(javaServiceStart, javaServiceUpgrade);
   }
 }
