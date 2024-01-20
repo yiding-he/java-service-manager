@@ -40,8 +40,12 @@ public abstract class AbstractJavaProject {
   }
 
   public static Path findUpgradeJarFile(JsmConf.JavaService javaService) {
-    var dir = Path.of(javaService.getPath()).resolve("upgrade");
+    var dir = getUpgradeDir(javaService);
     return findJarFile(dir);
+  }
+
+  public static Path getUpgradeDir(JsmConf.JavaService javaService) {
+      return Path.of(javaService.getPath()).resolve("upgrade");
   }
 
   private static Path findJarFile(Path dir) {

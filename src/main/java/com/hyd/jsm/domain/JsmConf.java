@@ -88,9 +88,19 @@ public class JsmConf {
 
     private boolean forceKill;
 
+    private String updateUrl;
+
     private LogConf log = new LogConf();
 
     ////////////////////////////////////////
+
+    public String getUpdateUrl() {
+      return updateUrl;
+    }
+
+    public void setUpdateUrl(String updateUrl) {
+      this.updateUrl = updateUrl;
+    }
 
     public String getMainClass() {
       return mainClass;
