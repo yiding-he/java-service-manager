@@ -68,6 +68,39 @@ public class JsmConf {
     }
   }
 
+  public static class UpgradeConf {
+
+    private String upgradeDir = "upgrade";
+
+    private String upgradeUrl;
+
+    private boolean backupBeforeUpgrade = true;
+
+    public String getUpgradeDir() {
+      return upgradeDir;
+    }
+
+    public void setUpgradeDir(String upgradeDir) {
+      this.upgradeDir = upgradeDir;
+    }
+
+    public String getUpgradeUrl() {
+      return upgradeUrl;
+    }
+
+    public void setUpgradeUrl(String upgradeUrl) {
+      this.upgradeUrl = upgradeUrl;
+    }
+
+    public boolean isBackupBeforeUpgrade() {
+      return backupBeforeUpgrade;
+    }
+
+    public void setBackupBeforeUpgrade(boolean backupBeforeUpgrade) {
+      this.backupBeforeUpgrade = backupBeforeUpgrade;
+    }
+  }
+
   public static class JavaService {
 
     private String execution = "java";
@@ -88,18 +121,18 @@ public class JsmConf {
 
     private boolean forceKill;
 
-    private String updateUrl;
-
     private LogConf log = new LogConf();
+
+    private UpgradeConf upgrade = new UpgradeConf();
 
     ////////////////////////////////////////
 
-    public String getUpdateUrl() {
-      return updateUrl;
+    public UpgradeConf getUpgrade() {
+      return upgrade;
     }
 
-    public void setUpdateUrl(String updateUrl) {
-      this.updateUrl = updateUrl;
+    public void setUpgrade(UpgradeConf upgrade) {
+      this.upgrade = upgrade;
     }
 
     public String getMainClass() {
@@ -182,6 +215,8 @@ public class JsmConf {
       this.path = path;
     }
   }
+
+  ////////////////////////////////////////
 
   private List<JavaService> services = new ArrayList<>();
 

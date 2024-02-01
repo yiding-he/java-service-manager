@@ -11,6 +11,10 @@ jsm.services:
     backup-dir: backups
     jvm-args: "-Xms100m -Xmx1000m"
     app-args: "--spring.profiles.active=prod"
+    upgrade:
+      backup-before-upgrade: true
+      upgrade-dir: upgrade
+      upgrade-url: http://10.1.1.1/jars/service1.jar
     log:
       output: file
       log-dir: logs

@@ -33,9 +33,9 @@ public class JavaServiceUpgrade extends AbstractCommand {
   public Result execute(CommandArgs args) throws Exception {
 
     // 如果配置了更新包下载地址，则下载到 upgrade 目录下
-    var updateUrl = currentJavaService.getUpdateUrl();
-    if (StringUtils.isNotBlank(updateUrl)) {
-      tryDownloadUpdateFile(updateUrl, getUpgradeDir(currentJavaService));
+    var upgradeUrl = currentJavaService.getUpgrade().getUpgradeUrl();
+    if (StringUtils.isNotBlank(upgradeUrl)) {
+      tryDownloadUpgradeFile(upgradeUrl, getUpgradeDir(currentJavaService));
     }
 
     // 确认 upgrade 目录下的更新包存在
@@ -68,7 +68,7 @@ public class JavaServiceUpgrade extends AbstractCommand {
     return Result.success("重新启动成功。");
   }
 
-  private void tryDownloadUpdateFile(String url, Path saveDir) throws IOException {
+  private void tryDownloadUpgradeFile(String url, Path saveDir) throws IOException {
     var fileName = url;
     var questionMarkIndex = fileName.indexOf("?");
     var slashIndex = fileName.lastIndexOf("/");
